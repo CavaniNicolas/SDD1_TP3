@@ -3,4 +3,8 @@
 #define ARBRE_H
 
 
+char * recupNotaAlgebrique(char * filename);
+
+
+
 #endif
