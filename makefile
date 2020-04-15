@@ -2,7 +2,7 @@
 CFLAGS = -Wall -Wextra -g -MMD
 LIB = -lm
 
-SRC = $(wildcard src/*.c)
+SRC = $(wildcard src/*.c) $(wildcard src/pilefile/*.c)
 OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
 DEP = $(patsubst %.o,%.d,$(OBJ))
 

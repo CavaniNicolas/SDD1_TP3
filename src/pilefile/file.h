@@ -6,6 +6,7 @@
 #ifndef FILE_H
 #define FILE_H
 
+#include "../arbre.h"
 /* ------------ */
 /* Type utilisé */
 /* ------------ */
