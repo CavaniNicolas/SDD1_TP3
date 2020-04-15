@@ -80,19 +80,23 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 	elemArbre_t * cour = arbre;
 	elemArbre_t * nouvElem = NULL;
 
-	if (pileArbre != NULL) {
+	if (arbre != NULL && pileArbre != NULL) {
 		while (notation[i] != '\0') {
 			if (notation[i] == '*') {
 				empiler(pileArbre, cour);
 				nouvElem = creerElemArbre();
-				cour->fils = nouvElem;
-				cour = nouvElem;
+				if (nouvElem != NULL) {
+					cour->fils = nouvElem;
+					cour = nouvElem;
+				}
 
 			} else if (notation[i] == '+') {
 				nouvElem = creerElemArbre();
-				cour->frere = nouvElem;
-				cour = nouvElem;
-				empiler(pileArbre, cour);
+				if (nouvElem != NULL) {
+					cour->frere = nouvElem;
+					cour = nouvElem;
+					empiler(pileArbre, cour);
+				}
 
 			} else if (notation[i] == ')') {
 				depiler(pileArbre, &cour);
@@ -150,7 +154,7 @@ void libererArbre(elemArbre_t ** arbre) {
 	pile_t * pileArbre = initPile(10);
 	pile_t * pileArbreLiberation = initPile(10);
 
-	if (pileArbre != NULL) {
+	if (*arbre != NULL && pileArbre != NULL && pileArbreLiberation != NULL) {
 		while (!fin) {
 
 			while (cour != NULL) {
