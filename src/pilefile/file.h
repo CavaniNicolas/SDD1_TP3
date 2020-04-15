@@ -9,18 +9,18 @@
 /* ------------ */
 /* Type utilisé */
 /* ------------ */
-typedef char type;
+typedef elemArbre_t * typeFile;
 
 
 /* -------------------- */
 /* Structure de la file */
 /* -------------------- */
 typedef struct file {
-	int    capacite;
-	int    nbElements;
-	int    indexInsertion;
-	int    indexSuppression;
-	type * base;
+	int        capacite;
+	int        nbElements;
+	int        indexInsertion;
+	int        indexSuppression;
+	typeFile * base;
 }file_t;
 
 
@@ -63,7 +63,7 @@ char estPleineFile(file_t * file);
 /*                                                                    */
 /* En sortie :  codeErreur (char) booléen : 1 si erreur, 0 sinon      */
 /* ------------------------------------------------------------------ */
-char enfiler(file_t * file, type valeur);
+char enfiler(file_t * file, typeFile valeur);
 
 
 /* -------------------------------------------------------------- */
@@ -75,7 +75,7 @@ char enfiler(file_t * file, type valeur);
 /*                                                                */
 /* En sortie :  codeErreur (char) booléen : 2 si erreur, 0 sinon  */
 /* -------------------------------------------------------------- */
-char defiler(file_t * file, type * valeur);
+char defiler(file_t * file, typeFile * valeur);
 
 
 /* --------------------------------------------------------------------- */
@@ -99,16 +99,16 @@ char redimensionnerFile(file_t * file, int nouvCapacite);
 void libererFile(file_t * file);
 
 
-/* --------------------------------------------------------- */
-/* afficherFile   Affiche la file passée en paramètre        */
-/*                                                           */
-/* En entrée :  file (file_t *) : File à afficher            */
-/*              pfAfficher (void (*)(type)) : pointeur sur   */
-/*                       la fonction d'affichage du bon type */
-/*                                                           */
-/* En sortie :  void                                         */
-/* --------------------------------------------------------- */
-void afficherFile(file_t * file, void (*pfAfficher) (type));
+/* ----------------------------------------------------------- */
+/* afficherFile   Affiche la file passée en paramètre          */
+/*                                                             */
+/* En entrée :  file (file_t *) : File à afficher              */
+/*              pfAfficher (void (*)(typeFile)) : pointeur sur */
+/*                       la fonction d'affichage du bon type   */
+/*                                                             */
+/* En sortie :  void                                           */
+/* ----------------------------------------------------------- */
+void afficherFile(file_t * file, void (*pfAfficher) (typeFile));
 
 
 /* --------------------------------------------------------- */

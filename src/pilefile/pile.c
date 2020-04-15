@@ -11,7 +11,7 @@
 char inverserPile(pile_t * pile) {
     char     codeErreur = 1;
     int      i          = 0;                 /*Compteur*/
-    type     valeur     = 0;                 /*Valeur d'entrée/sortie de la pile ou file*/
+    typePile     valeur     = 0;                 /*Valeur d'entrée/sortie de la pile ou file*/
     int      nbElems    = pile->sommet + 1;  /*Nombre d'elements dans la pile, à inverser*/
     file_t * file       = initFile(nbElems); /*File temporaire permettant d'inverser la pile*/
 
@@ -48,7 +48,7 @@ pile_t * initPile(int capacite) {
         (*pile).base = NULL;
 
         /* Allocation de la base de la pile */
-        (*pile).base = (type*)malloc(capacite*sizeof(type));
+        (*pile).base = (typePile*)malloc(capacite*sizeof(typePile));
         
         if ((*pile).base != NULL) {
             (*pile).capacite = capacite;
@@ -82,7 +82,7 @@ int estPleinePile(pile_t * pile) {
 }
 
 
-int empiler(pile_t * pile, type v) {
+int empiler(pile_t * pile, typePile v) {
     int codeErreur = 1;
 
     /* Si la pile est pleine, on redimensionne, sinon, on empile */
@@ -105,7 +105,7 @@ int empiler(pile_t * pile, type v) {
 }
 
 
-int depiler(pile_t * pile, type * v) {
+int depiler(pile_t * pile, typePile * v) {
     int codeErreur = 1;
     
     /* Si la pile est non vide, on depile */
@@ -129,7 +129,7 @@ int redimensionerPile(pile_t * pile, int nvCapacite) {
     int codeErreur = 1;
 
     /* On realloc la base */
-    type * nvBase = realloc((*pile).base, nvCapacite*sizeof(type));
+    typePile * nvBase = realloc((*pile).base, nvCapacite*sizeof(typePile));
     if (nvBase != NULL) {
         codeErreur = 0;
         /* Si l'allocation c'est bien faite, on modifie la base et la capacite */
@@ -140,7 +140,7 @@ int redimensionerPile(pile_t * pile, int nvCapacite) {
 }
 
 
-void afficherPile(pile_t * pile, void (*pfAfficher) (type)) {
+void afficherPile(pile_t * pile, void (*pfAfficher) (typePile)) {
 
     printf("Pile : capacite=%d\n", (*pile).capacite);
     printf("       ");

@@ -12,7 +12,7 @@ file_t * initFile(int capacite) {
     file_t * file = (file_t *)malloc(sizeof(file_t)); /*File créée*/
 
     if (file != NULL) {
-        file->base = (type *)malloc(capacite * sizeof(capacite));
+        file->base = (typeFile *)malloc(capacite * sizeof(capacite));
 
         /* Erreur de memoire */
         if (file->base == NULL) {
@@ -42,7 +42,7 @@ char estPleineFile(file_t * file) {
 }
 
 
-char enfiler(file_t * file, type valeur) {
+char enfiler(file_t * file, typeFile valeur) {
     char codeErreur = 1; /*Code erreur*/
 
     /* Si la file n'est pas déjà remplie, on enfile la valeur */
@@ -72,7 +72,7 @@ char enfiler(file_t * file, type valeur) {
 }
 
 
-char defiler(file_t * file, type * valeur) {
+char defiler(file_t * file, typeFile * valeur) {
     char codeErreur = 2; /*Code erreur*/
 
     /* Si la file n'est pas vide, on defile la valeur */
@@ -104,7 +104,7 @@ char redimensionnerFile(file_t * file, int nouvCapacite) {
     char codeErreur = 1; /*Code Erreur*/
     int  i          = 0; /*Compteur*/
 
-    type * nouvBase = (type *)malloc(nouvCapacite * sizeof(type));
+    typeFile * nouvBase = (typeFile *)malloc(nouvCapacite * sizeof(typeFile));
     
     /* Si l'allocation est sans erreur, on copie la file */
     if (nouvBase != NULL) {
@@ -135,7 +135,7 @@ void libererFile(file_t * file) {
 }
 
 
-void afficherFile(file_t * file, void (*pfAfficher) (type)) {
+void afficherFile(file_t * file, void (*pfAfficher) (typeFile)) {
     int i = 0; /*Compteur*/
 
     if (!estVideFile(file)) {

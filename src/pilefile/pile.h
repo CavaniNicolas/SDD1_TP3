@@ -9,16 +9,16 @@
 /* ------------ */
 /* Type utilisé */
 /* ------------ */
-typedef char type;
+typedef elemArbre_t * typePile;
 
 
 /* -------------------- */
 /* Structure de la pile */
 /* -------------------- */
 typedef struct pile {
-    int    capacite;
-    int    sommet;
-    type * base;
+    int        capacite;
+    int        sommet;
+    typePile * base;
 } pile_t;
 
 
@@ -63,23 +63,23 @@ int estPleinePile(pile_t *);
 /* empiler      Empile une valeur au sommet de la pile,               */
 /*                          et l'aggrandit si elle est trop petite    */
 /*                                                                    */
-/* En entrée :  pile (pile_t *) : Pile à remplir                      */
-/*              valeur (type)   : Elément à empiler                   */
+/* En entrée :  pile (pile_t *)   : Pile à remplir                    */
+/*              valeur (typePile) : Elément à empiler                 */
 /*                                                                    */
 /* En sortie :  codeErreur (int) booléen : 1 si erreur, 0 sinon       */
 /* ------------------------------------------------------------------ */
-int empiler(pile_t *, type);
+int empiler(pile_t *, typePile);
 
 /* -------------------------------------------------------------- */
 /* depiler      Dépile la valeur au sommet de la pile,            */
 /*                          et la réduit si elle peu utilisée     */
 /*                                                                */
-/* En entrée :  pile (pile_t *) : Pile à vider                    */
-/*              valeur (type)   : Elément dépilé                  */
+/* En entrée :  pile (pile_t *)   : Pile à vider                  */
+/*              valeur (typePile) : Elément dépilé                */
 /*                                                                */
 /* En sortie :  codeErreur (int) booléen : 2 si erreur, 0 sinon   */
 /* -------------------------------------------------------------- */
-int depiler(pile_t *, type *);
+int depiler(pile_t *, typePile *);
 
 /* ------------------------------------------------------------ */
 /* redimensionerPile    Redimensionne la base de la pile        */
@@ -100,15 +100,15 @@ int redimensionerPile(pile_t *, int);
 /* --------------------------------------------------------- */
 void libererPile(pile_t *);
 
-/* ----------------------------------------------------------*/
-/* afficherPile     Affiche la pile                          */
-/*                                                           */
-/* En entrée : pile (pile_t *) : Pile à afficher             */
-/*             pfAfficher (void (*)(type)) : pointeur sur    */
-/*                       la fonction d'affichage du bon type */
-/* En sortie : void                                          */
-/* ----------------------------------------------------------*/
-void afficherPile(pile_t *, void (*) (type));
+/* ---------------------------------------------------------- */
+/* afficherPile     Affiche la pile                           */
+/*                                                            */
+/* En entrée : pile (pile_t *) : Pile à afficher              */
+/*             pfAfficher (void (*)(typePile)) : pointeur sur */
+/*                       la fonction d'affichage du bon type  */
+/* En sortie : void                                           */
+/* ---------------------------------------------------------- */
+void afficherPile(pile_t *, void (*) (typePile));
 
 
 /* --------------------------------------------------- */
