@@ -17,7 +17,7 @@ char * recupNotaAlgebrique(char * filename) {
 		taille = tailleChaine(ligne);
 		charFinChaine(ligne, &taille);
 
-		notation = (char *)malloc(taille * sizeof(char));
+		notation = (char *)malloc((taille+1) * sizeof(char));
 
 		if (notation != NULL) {
 			copierChaine(notation, ligne);
@@ -29,21 +29,27 @@ char * recupNotaAlgebrique(char * filename) {
 }
 
 
+// enleve les characteres de fin de chaine \r et \n
 void charFinChaine(char * chaine, int * taille) {
 	if (chaine[*taille-1] == '\n') {
 		chaine[*taille-1] = '\0';
-		(*taille)--;
+		(*taille) -= 1;
+	}
+
+	if (chaine[*taille-1] == '\r') {
+		chaine[*taille-1] = '\0';
+		(*taille) -= 1;
 	}
 }
 
-
+//Renvoie la taille de la chaine passée en parametre
+//ne compte pas le '\0'
 int tailleChaine(char * chaine) {
 	int taille = 0;
 
 	while (chaine[taille] != '\0') {
-		taille++;
+			taille++;
 	}
-
 	return taille;
 }
 
@@ -82,8 +88,10 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 
 	if (arbre != NULL && pileArbre != NULL) {
 		while (notation[i] != '\0') {
+
 			if (notation[i] == '*') {
-				empiler(pileArbre, cour);
+
+				//empiler(pileArbre, cour);
 				nouvElem = creerElemArbre();
 				if (nouvElem != NULL) {
 					cour->fils = nouvElem;
@@ -91,14 +99,21 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 				}
 
 			} else if (notation[i] == '+') {
+
+				depiler(pileArbre, &cour);
 				nouvElem = creerElemArbre();
+
 				if (nouvElem != NULL) {
 					cour->frere = nouvElem;
 					cour = nouvElem;
 					empiler(pileArbre, cour);
 				}
 
+			} else if (notation[i] == '(') {
+				empiler(pileArbre, cour);
+
 			} else if (notation[i] == ')') {
+
 				depiler(pileArbre, &cour);
 
 			} else {
