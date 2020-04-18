@@ -1,3 +1,11 @@
+/* ------------------------------------------------ */
+/* Nom du fichier : main.c                          */
+/* Date de creation : Avril 2020                    */
+/* Auteurs : Cavani Nicolas et Leduque Adrien (G31) */
+/* Objectif : main pour la manipulation d'arbres    */
+/* Fonctions :                                      */
+/*  - main                                          */
+/* ------------------------------------------------ */
 
 #include <stdlib.h>
 #include <stdio.h>

@@ -1,3 +1,18 @@
+/* ------------------------------------------------ */
+/* Nom du fichier : arbre.c                         */
+/* Date de creation : Avril 2020                    */
+/* Auteurs : Cavani Nicolas et Leduque Adrien (G31) */
+/* Objectif : manipuler les arbres                  */
+/* Fonctions :                                      */
+/*  - initialiser_pile                              */
+/*  - afficher_pile                                 */
+/*  - est_pile_vide                                 */
+/*  - est_pile_pleine                               */
+/*  - empiler                                       */
+/*  - depiler                                       */
+/*  - sommet                                        */
+/*  - liberer_pile                                  */
+/* ------------------------------------------------ */
 
 #include <stdio.h>
 #include <stdlib.h>
