@@ -39,7 +39,7 @@ char * recupNotaAlgebrique(char * filename);
 
 /* ------------------------------------------------------------------------- */
 /* creerElemArbre                                                            */
-/*       Creer un nouvel element vide dans l'arbre                           */
+/*                 Creer un nouvel element vide dans l'arbre                 */
 /*                                                                           */
 /* En entrée : (void)                                                        */
 /*                                                                           */
@@ -50,7 +50,7 @@ elemArbre_t * creerElemArbre();
 
 /* ------------------------------------------------------------------------- */
 /* creerArbreNotaAlgebrique                                                  */
-/*          Creer un arbre à partir d'une notation algébrique                */
+/*             Creer un arbre à partir d'une notation algébrique             */
 /*                                                                           */
 /* En entrée : notation (char *) : notation algébrique                       */
 /*                                                                           */
@@ -61,63 +61,70 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation);
 
 /* ------------------------------------------------------------------------- */
 /* charFinChaine                                                             */
-/*                                                                           */
-/*                                                                           */
+/*     Supprime les characteres de fin de chaine \r et \n si ils existent    */
+/*     et modifie la taille de la chaine en consequent                       */
 /*                                                                           */
 /* En entrée : chaine (char *) : chaine de charactères                       */
 /*             taille (int *)  : taille de la chaine                         */
 /*                                                                           */
-/* En sortie :                                                               */
+/* En sortie : (void)                                                        */
 /* ------------------------------------------------------------------------- */
 void charFinChaine(char * chaine, int * taille);
 
 
 /* ------------------------------------------------------------------------- */
 /* tailleChaine                                                              */
+/*     Calcul la longueur d'une chaine de caracteres, \0 n'est pas compté    */
 /*                                                                           */
-/* En entrée :                                                               */
+/* En entrée : chaine (char *) : chaine de caracteres a mesurer              */
 /*                                                                           */
-/* En sortie :                                                               */
+/* En sortie : taille (int) : taille de la chaine                            */
 /* ------------------------------------------------------------------------- */
 int tailleChaine(char * chaine);
 
 
 /* ------------------------------------------------------------------------- */
 /* copierChaine                                                              */
+/*             Copie la chaine de caracteres chaine2 dans chaine1            */
 /*                                                                           */
-/* En entrée :                                                               */
+/* En entrée : chaine1 (char *) : chaine copiée, celle a remplir             */
+/*             chaine2 (char *) : chaine à copier                            */
 /*                                                                           */
-/* En sortie :                                                               */
+/* En sortie : (void)                                                        */
 /* ------------------------------------------------------------------------- */
 void copierChaine(char * chaine1, char * chaine2);
 
 
 /* ------------------------------------------------------------------------- */
 /* afficherArbre                                                             */
+/*       Affiche les valeurs contenu dans l'arbre dans l'ordre préfixé       */
 /*                                                                           */
-/* En entrée :                                                               */
+/* En entrée : arbre (elemArbre_t *) : pointeur sur la racine de l'arbre     */
 /*                                                                           */
-/* En sortie :                                                               */
+/* En sortie : (void)                                                        */
 /* ------------------------------------------------------------------------- */
 void afficherArbre(elemArbre_t * arbre);
 
 
 /* ------------------------------------------------------------------------- */
 /* afficherValeur                                                            */
+/*  Affiche la valeur contenu dans un élément de l'arbre passé en paramêtre  */
 /*                                                                           */
-/* En entrée :                                                               */
+/* En entrée : elemArbre (elemArbre_t *) : element de l'arbre                */
 /*                                                                           */
-/* En sortie :                                                               */
+/* En sortie : (void)                                                        */
 /* ------------------------------------------------------------------------- */
 void afficherValeur(elemArbre_t * elemArbre);
 
 
 /* ------------------------------------------------------------------------- */
 /* libererArbre                                                              */
+/*            Libere la memoire, free tous les éléments de l'arbre           */
 /*                                                                           */
-/* En entrée :                                                               */
+/* En entrée : arbre (elemArbre_t **) : pointeur sur la racine de l'arbre    */
+/*                                      passé par adresse                    */
 /*                                                                           */
-/* En sortie :                                                               */
+/* En sortie : (void)                                                        */
 /* ------------------------------------------------------------------------- */
 void libererArbre(elemArbre_t ** arbre);
 
