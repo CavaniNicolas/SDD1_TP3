@@ -93,6 +93,7 @@ elemArbre_t * creerElemArbre() {
 
 elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 	int i = 0;
+	int codeErreur = 0;
 	int taille = tailleChaine(notation);
 
 	pile_t * pileArbre = initPile(taille/2);
@@ -100,17 +101,20 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 	elemArbre_t * arbre = creerElemArbre();
 	elemArbre_t * cour = arbre;
 	elemArbre_t * nouvElem = NULL;
+	empiler(pileArbre, cour);
 
 	if (arbre != NULL && pileArbre != NULL) {
-		while (notation[i] != '\0') {
+		while (notation[i] != '\0' && codeErreur == 0) {
 
 			if (notation[i] == '*') {
 
-				//empiler(pileArbre, cour);
 				nouvElem = creerElemArbre();
 				if (nouvElem != NULL) {
 					cour->fils = nouvElem;
 					cour = nouvElem;
+
+				} else {
+					codeErreur = 1;
 				}
 
 			} else if (notation[i] == '+') {
@@ -122,13 +126,15 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 					cour->frere = nouvElem;
 					cour = nouvElem;
 					empiler(pileArbre, cour);
+
+				} else {
+					codeErreur = 1;
 				}
 
 			} else if (notation[i] == '(') {
 				empiler(pileArbre, cour);
 
 			} else if (notation[i] == ')') {
-
 				depiler(pileArbre, &cour);
 
 			} else {
@@ -138,6 +144,11 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 		}
 
 		libererPile(pileArbre);
+
+		if (codeErreur == 1) {
+			libererArbre(&arbre);
+		}
+
 	}
 	return arbre;
 }
