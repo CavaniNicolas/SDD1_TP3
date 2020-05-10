@@ -11,7 +11,10 @@
 /*  - tailleChaine                                                            */
 /*  - copierChaine                                                            */
 /*  - afficherArbre                                                           */
+/*  - initTabFreres                                                           */
 /*  - afficherValeur                                                          */
+/*  - actuTabFreres                                                           */
+/*  - afficherArbrePre                                                        */
 /*  - libererArbre                                                            */
 /* -------------------------------------------------------------------------- */
 
@@ -97,7 +100,7 @@ void copierChaine(char * chaine1, char * chaine2);
 
 /* -------------------------------------------------------------------------- */
 /* afficherArbre                                                              */
-/*       Affiche les valeurs contenu dans l'arbre dans l'ordre préfixé        */
+/*       Affiche l'arbre de la même manière que la commande tree              */
 /*                                                                            */
 /* En entrée : arbre (elemArbre_t *) : pointeur sur la racine de l'arbre      */
 /*                                                                            */
@@ -110,11 +113,42 @@ void afficherArbre(elemArbre_t * arbre);
 /* afficherValeur                                                             */
 /*  Affiche la valeur contenu dans un élément de l'arbre passé en paramêtre   */
 /*                                                                            */
-/* En entrée : elemArbre (elemArbre_t *) : element de l'arbre                 */
+/* En entrée : elemArbre (elemArbre_t *) : element de l'arbre à aficher       */
+/*             niveau (int) : niveau dans l'arbre de la valeur a afficher     */
+/*             tabFreres (int *) : tableau de codes Freres pour l'affichage   */
 /*                                                                            */
 /* En sortie : (void)                                                         */
 /* -------------------------------------------------------------------------- */
-void afficherValeur(elemArbre_t * elemArbre);
+void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres);
+
+
+/* -------------------------------------------------------------------------- */
+/* initTabFreres                                                              */
+/*       Initialise le tableau de codes Frères pour l'affichage graphique     */
+/*       codes dans tabFreres :                                               */
+/*       0 : pas de frere                                                     */
+/*       1 : des freres avant et après                                        */
+/*       2 : des freres avant mais pas après                                  */
+/*                                                                            */
+/* En entrée : taille (int) : taille du tableau                               */
+/*                                                                            */
+/* En sortie : tabFreres (int *) : le tableau d'entier contenant que des 0    */
+/* -------------------------------------------------------------------------- */
+int * initTabFreres(int taille);
+
+//com
+void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres);
+
+
+/* -------------------------------------------------------------------------- */
+/* afficherArbrePre                                                           */
+/*       Affiche les valeurs contenu dans l'arbre dans l'ordre préfixé        */
+/*                                                                            */
+/* En entrée : arbre (elemArbre_t *) : pointeur sur la racine de l'arbre      */
+/*                                                                            */
+/* En sortie : (void)                                                         */
+/* -------------------------------------------------------------------------- */
+void afficherArbrePre(elemArbre_t * arbre);
 
 
 /* -------------------------------------------------------------------------- */

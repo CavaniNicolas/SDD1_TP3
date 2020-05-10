@@ -146,6 +146,104 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 
 
 void afficherArbre(elemArbre_t * arbre) {
+	if (arbre != NULL) {
+
+		char fin = 0;
+		int niveau = 0;
+		int * tabFreres = initTabFreres(255);
+
+		if (tabFreres != NULL) {
+
+			elemArbre_t * cour = arbre;
+printf("%d\n", cour);
+			actuTabFreres(cour, niveau, tabFreres);
+			pile_t * pileArbre = initPile(10);
+			if (pileArbre != NULL) {
+				printf(".\n");
+				while (!fin) {
+
+					while (cour != NULL) {
+						afficherValeur(cour, niveau, tabFreres);
+
+						empiler(pileArbre, cour);
+						cour = cour->fils;
+						niveau += 1;
+						actuTabFreres(cour, niveau, tabFreres);
+					}
+
+					if (!estVidePile(pileArbre)) {
+						depiler(pileArbre, &cour);
+						niveau -= 1;
+						cour = cour->frere;
+						actuTabFreres(cour, niveau, tabFreres);
+
+					} else {
+						fin = 1;
+					}	
+				}
+				libererPile(pileArbre);
+			}
+		}
+		free(tabFreres);
+	}
+}
+
+
+int * initTabFreres(int taille) {
+	int * tabFreres = (int *)malloc(taille * sizeof(int));
+	if (tabFreres != NULL) {
+		for (int i=0; i<taille; i++) {
+			tabFreres[i] = 0;
+		}
+	}
+	return tabFreres;
+}
+
+// variante graphique
+// "╠══ "
+// "║   "
+// "╚══ "
+// "    "
+void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres) {
+	int i = 0;
+	for (i=0; i<=niveau; i++) {
+
+		if (tabFreres[i] == 0) {
+			printf("    ");
+
+		} else if (tabFreres[i] == 1) {
+
+			if (i == niveau)
+				printf("├── ");
+			else
+				printf("│    ");
+
+		} else if (tabFreres[i] == 2) {
+			printf("└── ");
+
+		}
+
+	}
+	printf("%c %d\n", elemArbre->valeur, tabFreres[niveau]);
+}
+
+
+void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres) {
+	if (cour != NULL) {
+		if (cour->frere == NULL) {
+			if (tabFreres[niveau] == 1)
+				tabFreres[niveau] = 2;
+			else
+				tabFreres[niveau] = 0;
+
+		} else {
+			tabFreres[niveau] = 1;
+		}
+	}
+}
+
+
+void afficherArbrePre(elemArbre_t * arbre) {
 	char fin = 0;
 
 	elemArbre_t * cour = arbre;
@@ -155,7 +253,7 @@ void afficherArbre(elemArbre_t * arbre) {
 		while (!fin) {
 
 			while (cour != NULL) {
-				afficherValeur(cour);
+				printf("%c", cour->valeur);
 
 				empiler(pileArbre, cour);
 				cour = cour->fils;
@@ -171,11 +269,6 @@ void afficherArbre(elemArbre_t * arbre) {
 		}
 		libererPile(pileArbre);
 	}
-}
-
-
-void afficherValeur(elemArbre_t * elemArbre) {
-	printf("%c", elemArbre->valeur);
 }
 
 
