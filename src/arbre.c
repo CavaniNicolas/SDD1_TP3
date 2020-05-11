@@ -155,9 +155,10 @@ void afficherArbre(elemArbre_t * arbre) {
 		if (tabFreres != NULL) {
 
 			elemArbre_t * cour = arbre;
-printf("%d\n", cour);
-			actuTabFreres(cour, niveau, tabFreres);
 			pile_t * pileArbre = initPile(10);
+
+			actuTabFreres(cour, niveau, tabFreres);
+
 			if (pileArbre != NULL) {
 				printf(".\n");
 				while (!fin) {
@@ -206,39 +207,29 @@ int * initTabFreres(int taille) {
 // "    "
 void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres) {
 	int i = 0;
-	for (i=0; i<=niveau; i++) {
+	for (i=0; i<niveau; i++) {
 
-		if (tabFreres[i] == 0) {
+		if (tabFreres[i] == 0)
 			printf("    ");
-
-		} else if (tabFreres[i] == 1) {
-
-			if (i == niveau)
-				printf("├── ");
-			else
-				printf("│    ");
-
-		} else if (tabFreres[i] == 2) {
-			printf("└── ");
-
-		}
-
+		else
+			printf("│    ");
 	}
-	printf("%c %d\n", elemArbre->valeur, tabFreres[niveau]);
+
+	if (elemArbre->frere != NULL)
+		printf("├── ");
+	else
+		printf("└── ");
+
+	printf("%c\n", elemArbre->valeur);
 }
 
 
 void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres) {
 	if (cour != NULL) {
-		if (cour->frere == NULL) {
-			if (tabFreres[niveau] == 1)
-				tabFreres[niveau] = 2;
-			else
-				tabFreres[niveau] = 0;
-
-		} else {
+		if (cour->frere == NULL)
+			tabFreres[niveau] = 0;
+		else
 			tabFreres[niveau] = 1;
-		}
 	}
 }
 

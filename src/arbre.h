@@ -128,7 +128,6 @@ void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres);
 /*       codes dans tabFreres :                                               */
 /*       0 : pas de frere                                                     */
 /*       1 : des freres avant et après                                        */
-/*       2 : des freres avant mais pas après                                  */
 /*                                                                            */
 /* En entrée : taille (int) : taille du tableau                               */
 /*                                                                            */
