@@ -23,7 +23,7 @@ char * recupNotaAlgebrique(char * filename) {
 		taille = tailleChaine(ligne);
 		charFinChaine(ligne, &taille);
 
-		notation = (char *)malloc((taille+1) * sizeof(char));
+		notation = (char *)calloc(taille+1, sizeof(char));
 
 		if (notation != NULL) {
 			copierChaine(notation, ligne);
@@ -150,7 +150,7 @@ void afficherArbre(elemArbre_t * arbre) {
 
 		char fin = 0;
 		int niveau = 0;
-		int * tabFreres = initTabFreres(255);
+		int * tabFreres = (int *)calloc(255, sizeof(int));
 
 		if (tabFreres != NULL) {
 
@@ -160,7 +160,7 @@ void afficherArbre(elemArbre_t * arbre) {
 			actuTabFreres(cour, niveau, tabFreres);
 
 			if (pileArbre != NULL) {
-				printf(".\n");
+				printf("Arbre :\n.\n");
 				while (!fin) {
 
 					while (cour != NULL) {
@@ -190,16 +190,6 @@ void afficherArbre(elemArbre_t * arbre) {
 }
 
 
-int * initTabFreres(int taille) {
-	int * tabFreres = (int *)malloc(taille * sizeof(int));
-	if (tabFreres != NULL) {
-		for (int i=0; i<taille; i++) {
-			tabFreres[i] = 0;
-		}
-	}
-	return tabFreres;
-}
-
 // variante graphique
 // "╠══ "
 // "║   "
@@ -212,7 +202,7 @@ void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres) {
 		if (tabFreres[i] == 0)
 			printf("    ");
 		else
-			printf("│    ");
+			printf("│   ");
 	}
 
 	if (elemArbre->frere != NULL)
@@ -234,13 +224,43 @@ void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres) {
 }
 
 
-void afficherArbrePre(elemArbre_t * arbre) {
+void afficherArbrePost(elemArbre_t * arbre) {
 	char fin = 0;
 
 	elemArbre_t * cour = arbre;
 	pile_t * pileArbre = initPile(10);
 
 	if (pileArbre != NULL) {
+		printf("Représentation postfixée :\n\t");
+		while (!fin) {
+
+			while (cour != NULL) {
+				empiler(pileArbre, cour);
+				cour = cour->fils;
+			}
+
+			depiler(pileArbre, &cour);
+			printf("%c", cour->valeur);
+			cour = cour->frere;
+
+			if (estVidePile(pileArbre) && cour == NULL) {
+				fin = 1;
+			}
+		}
+		printf("\n");
+		libererPile(pileArbre);
+	}
+}
+
+
+void afficherArbrePref(elemArbre_t * arbre) {
+	char fin = 0;
+
+	elemArbre_t * cour = arbre;
+	pile_t * pileArbre = initPile(10);
+
+	if (pileArbre != NULL) {
+		printf("Représentation préfixée :\n\t");
 		while (!fin) {
 
 			while (cour != NULL) {
@@ -258,6 +278,7 @@ void afficherArbrePre(elemArbre_t * arbre) {
 				fin = 1;
 			}	
 		}
+		printf("\n");
 		libererPile(pileArbre);
 	}
 }

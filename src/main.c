@@ -17,11 +17,13 @@ int main() {
 	elemArbre_t * arbre = NULL;
 
 	if (notation != NULL) {
-		printf("%s\n", notation);
+		printf("Notation Algébrique :\n\t%s\n", notation);
 		arbre = creerArbreNotaAlgebrique(notation);
 		
 		if (arbre != NULL) {
 			afficherArbre(arbre);
+			afficherArbrePost(arbre);
+			afficherArbrePref(arbre);
 			libererArbre(&arbre);
 		}
 	}

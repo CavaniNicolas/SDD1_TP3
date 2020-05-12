@@ -11,10 +11,10 @@
 /*  - tailleChaine                                                            */
 /*  - copierChaine                                                            */
 /*  - afficherArbre                                                           */
-/*  - initTabFreres                                                           */
-/*  - afficherValeur                                                          */
 /*  - actuTabFreres                                                           */
-/*  - afficherArbrePre                                                        */
+/*  - afficherValeur                                                          */
+/*  - afficherArbrePost                                                       */
+/*  - afficherArbrePref                                                       */
 /*  - libererArbre                                                            */
 /* -------------------------------------------------------------------------- */
 
@@ -113,7 +113,7 @@ void afficherArbre(elemArbre_t * arbre);
 /* afficherValeur                                                             */
 /*  Affiche la valeur contenu dans un élément de l'arbre passé en paramêtre   */
 /*                                                                            */
-/* En entrée : elemArbre (elemArbre_t *) : element de l'arbre à aficher       */
+/* En entrée : elemArbre (elemArbre_t *) : element de l'arbre à afficher      */
 /*             niveau (int) : niveau dans l'arbre de la valeur a afficher     */
 /*             tabFreres (int *) : tableau de codes Freres pour l'affichage   */
 /*                                                                            */
@@ -123,31 +123,33 @@ void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres);
 
 
 /* -------------------------------------------------------------------------- */
-/* initTabFreres                                                              */
-/*       Initialise le tableau de codes Frères pour l'affichage graphique     */
-/*       codes dans tabFreres :                                               */
+/* actuTabFreres                                                              */
+/*       Actualise le tableau de code Freres pour l'affichage graphique       */
 /*       0 : pas de frere                                                     */
 /*       1 : des freres avant et après                                        */
 /*                                                                            */
-/* En entrée : taille (int) : taille du tableau                               */
+/* En entrée : cour (elemArbre_t *) : element courant de l'arbre à actualiser */
+/*             niveau (int) : niveau dans l'arbre de la valeur a actualiser   */
+/*             tabFreres (int *) : tableau de codes Freres pour l'affichage   */
 /*                                                                            */
-/* En sortie : tabFreres (int *) : le tableau d'entier contenant que des 0    */
+/* En sortie : (void)                                                         */
 /* -------------------------------------------------------------------------- */
-int * initTabFreres(int taille);
-
-//com
 void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres);
 
 
+//com
+void afficherArbrePost(elemArbre_t * arbre);
+
+
 /* -------------------------------------------------------------------------- */
-/* afficherArbrePre                                                           */
+/* afficherArbrePref                                                          */
 /*       Affiche les valeurs contenu dans l'arbre dans l'ordre préfixé        */
 /*                                                                            */
 /* En entrée : arbre (elemArbre_t *) : pointeur sur la racine de l'arbre      */
 /*                                                                            */
 /* En sortie : (void)                                                         */
 /* -------------------------------------------------------------------------- */
-void afficherArbrePre(elemArbre_t * arbre);
+void afficherArbrePref(elemArbre_t * arbre);
 
 
 /* -------------------------------------------------------------------------- */
