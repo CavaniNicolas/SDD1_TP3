@@ -30,6 +30,12 @@ int main() {
 				afficherRepres(represPost);
 			}
 
+			elemArbre_t * cour = rechercherValeur(arbre, 'f');
+			if (cour != NULL) {
+				cour->valeur = '5';
+				afficherArbre(arbre);
+			}
+
 			free(represPost);
 			libererArbre(&arbre);
 		}

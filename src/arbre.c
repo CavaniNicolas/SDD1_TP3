@@ -353,6 +353,47 @@ void afficherArbrePref(elemArbre_t * arbre) {
 }
 
 
+
+elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
+	char fin = 0;
+	char trouve = 0;
+
+	elemArbre_t * cour = arbre;
+	pile_t * pileArbre = initPile(10);
+
+	if (pileArbre != NULL) {
+		while (!fin) {
+
+			while (cour != NULL && !trouve) {
+
+				if (cour->valeur == valeur) {
+					trouve = 1;
+
+				} else {
+					empiler(pileArbre, cour);
+					cour = cour->fils;
+				}
+			}
+
+			if (!estVidePile(pileArbre) && !trouve) {
+				depiler(pileArbre, &cour);
+				cour = cour->frere;
+
+			} else {
+				fin = 1;
+			}
+		}
+		libererPile(pileArbre);
+	}
+
+	if (!trouve) {
+		cour = NULL;
+	}
+	return cour;
+}
+
+
+
 void libererArbre(elemArbre_t ** arbre) {
 	char fin = 0;
 
