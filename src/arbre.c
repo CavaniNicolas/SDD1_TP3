@@ -76,6 +76,9 @@ elemArbre_t * creerElemArbre() {
 	if (elemArbre != NULL) {
 		elemArbre->fils = NULL;
 		elemArbre->frere = NULL;
+
+	} else {
+		printf("Erreur mémoire lors de l'allocation d'un nouvel élément\n");
 	}
 
 	return elemArbre;
@@ -387,10 +390,36 @@ elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
 	}
 
 	if (!trouve) {
+		printf("La valeur n'a pas été trouvée\n");
 		cour = NULL;
 	}
 	return cour;
 }
+
+
+void insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
+
+	elemArbre_t * nouvElem = creerElemArbre();
+
+	if (nouvElem != NULL) {
+		nouvElem->valeur = nouvValeur;
+
+		elemArbre_t * cour = rechercherValeur(arbre, valeurPere);
+		elemArbre_t ** prec = &cour->fils;
+		cour = cour->fils;
+
+		if (cour != NULL) {
+
+			while (cour != NULL) {
+				prec = &cour->frere;
+				cour = cour->frere;
+			}
+
+		}
+		*prec = nouvElem;
+	}
+}
+
 
 
 

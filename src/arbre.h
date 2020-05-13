@@ -146,6 +146,7 @@ void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem);
 void afficherRepres(char * repres);
 
 elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur);
+void insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur);
 
 
 /* -------------------------------------------------------------------------- */

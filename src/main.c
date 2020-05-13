@@ -36,6 +36,10 @@ int main() {
 				afficherArbre(arbre);
 			}
 
+			insererFils(arbre, 'b', '2');
+			afficherArbre(arbre);
+
+
 			free(represPost);
 			libererArbre(&arbre);
 		}
