@@ -24,6 +24,13 @@ int main() {
 			afficherArbre(arbre);
 			afficherArbrePost(arbre);
 			afficherArbrePref(arbre);
+
+			char * represPost = creerRepresPost(arbre);
+			if (represPost != NULL) {
+				afficherRepres(represPost);
+			}
+
+			free(represPost);
 			libererArbre(&arbre);
 		}
 	}

@@ -253,6 +253,75 @@ void afficherArbrePost(elemArbre_t * arbre) {
 }
 
 
+char * creerRepresPost(elemArbre_t * arbre) {
+	char fin = 0;
+	int nbElem = 0;
+
+	elemArbre_t * cour = arbre;
+	pile_t * pileArbre = initPile(10);
+	char * represPost = (char *)calloc(100, sizeof(char));
+
+	if (pileArbre != NULL && represPost != NULL) {
+		while (!fin) {
+
+			while (cour != NULL) {
+				empiler(pileArbre, cour);
+				cour = cour->fils;
+			}
+
+			depiler(pileArbre, &cour);
+			ajouterValeurRepres(represPost, cour, nbElem);
+			nbElem += 2;
+			cour = cour->frere;
+
+			if (estVidePile(pileArbre) && cour == NULL) {
+				fin = 1;
+			}
+		}
+
+	} else {
+		free(represPost);
+	}
+	libererPile(pileArbre);
+
+	return represPost;
+}
+
+
+// attention a la taille max de represPost
+void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem) {
+	int compteur = 0;
+	elemArbre_t * cour = elemArbre->fils;
+
+	repres[nbElem] = elemArbre->valeur;
+
+	while (cour != NULL) {
+		compteur ++;
+		cour = cour->frere;
+	}
+
+	// fonction a modifier pour pouvoir prendre en compte les fratries de 10 et plus
+	if (compteur > 9) {
+		compteur = 9;
+	}
+
+	repres[nbElem+1] = compteur + '0';
+}
+
+
+void afficherRepres(char * repres) {
+	int i = 0;
+
+	printf("Représentation postfixée :\n\t");
+
+	while (repres[i] != '\0') {
+		printf("(%c,%c)", repres[i], repres[i+1]);
+		i += 2;
+	}
+	printf("\n");
+}
+
+
 void afficherArbrePref(elemArbre_t * arbre) {
 	char fin = 0;
 

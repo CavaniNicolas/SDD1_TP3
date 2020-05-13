@@ -140,6 +140,12 @@ void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres);
 //com
 void afficherArbrePost(elemArbre_t * arbre);
 
+//com + a ajouter dans lentete
+char * creerRepresPost(elemArbre_t * arbre);
+void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem);
+void afficherRepres(char * repres);
+
+
 
 /* -------------------------------------------------------------------------- */
 /* afficherArbrePref                                                          */
