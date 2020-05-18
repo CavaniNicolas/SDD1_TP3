@@ -215,6 +215,10 @@ void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres) {
 
 	printf("%c\n", elemArbre->valeur);
 }
+/*Fonctions a demander a l'utilisateur de la bibliotheque :
+inserer un element
+liberer un element
+afficher un element, cette fonction doit retourner une chaine caractere correspondant a la valeur (qui peut etre de nimporte quel type)*/
 
 
 void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres) {
@@ -348,7 +352,7 @@ void afficherArbrePref(elemArbre_t * arbre) {
 
 			} else {
 				fin = 1;
-			}	
+			}
 		}
 		printf("\n");
 		libererPile(pileArbre);
@@ -426,23 +430,24 @@ void insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
 void libererArbre(elemArbre_t ** arbre) {
 	char fin = 0;
 
+	elemArbre_t * prec = *arbre;
 	elemArbre_t * cour = *arbre;
 	pile_t * pileArbre = initPile(10);
-	pile_t * pileArbreLiberation = initPile(10);
 
-	if (*arbre != NULL && pileArbre != NULL && pileArbreLiberation != NULL) {
+
+	if (*arbre != NULL && pileArbre != NULL) {
 		while (!fin) {
 
 			while (cour != NULL) {
-				empiler(pileArbreLiberation, cour);
-
 				empiler(pileArbre, cour);
 				cour = cour->fils;
 			}
 
 			if (!estVidePile(pileArbre)) {
 				depiler(pileArbre, &cour);
+				prec = cour;
 				cour = cour->frere;
+				free(prec);
 
 			} else {
 				fin = 1;
@@ -452,11 +457,5 @@ void libererArbre(elemArbre_t ** arbre) {
 
 	libererPile(pileArbre);
 
-	while (!estVidePile(pileArbreLiberation)) {
-		depiler(pileArbreLiberation, &cour);
-		free(cour);
-	}
-
-	libererPile(pileArbreLiberation);
 	(*arbre) = NULL;
 }
