@@ -3,25 +3,34 @@
 /* Date de creation : Avril 2020                                              */
 /* Auteurs : Cavani Nicolas et Leduque Adrien (G31)                           */
 /* Objectif : manipuler les arbres                                            */
+/*                                                                            */
 /* Fonctions :                                                                */
+/*                                                                            */
+/* ------------- Fonctions de création de la notation algébrique ------------ */
 /*  - recupNotaAlgebrique                                                     */
+/*  - actualiserTailleChaine                                                  */
+/*  - ecoTailleChaine                                                         */
+/*                                                                            */
+/* ------------ Fonctions de création et de traitement de l'arbre ----------- */
 /*  - creerElemArbre                                                          */
 /*  - creerArbreNotaAlgebrique                                                */
-/*                                                                            */
+/*  - rechercherValeur                                                        */
+/*  - insererFils                                                             */
 /*  - libererArbre                                                            */
 /*                                                                            */
+/* -------------- Fonctions liées à la representation postfixée ------------- */
 /*  - creerRepresPost                                                         */
 /*  - ajouterValeurRepres                                                     */
 /*  - afficherRepres                                                          */
-/*  - rechercherValeur                                                        */
-/*  - insererFils                                                             */
 /*                                                                            */
+/* --------------------- Fonctions d'affichage de l'arbre ------------------- */
 /*  - afficherArbre                                                           */
 /*  - actuTabFreres                                                           */
 /*  - afficherValeur                                                          */
 /*  - afficherArbrePost                                                       */
 /*  - afficherArbrePref                                                       */
 /*                                                                            */
+/* ------------- Fonctions utilitaires de traitement de chaines ------------- */
 /*  - charFinChaine                                                           */
 /*  - tailleChaine                                                            */
 /*  - copierChaine                                                            */
@@ -30,6 +39,7 @@
 
 #ifndef ARBRE_H
 #define ARBRE_H
+
 
 /* -------------------------------------------------------------------------- */
 /* struct elemArbre (typedef elemArbre_t) : Structure d'un élément de l'arbre */
@@ -42,6 +52,12 @@ typedef struct elemArbre{
 	struct elemArbre * fils;
 	struct elemArbre * frere;
 } elemArbre_t;
+
+
+
+/*════════════════════════════════════════════════════════════════════════════*/
+/* ------------- Fonctions de création de la notation algébrique ------------ */
+/*════════════════════════════════════════════════════════════════════════════*/
 
 
 /* -------------------------------------------------------------------------- */
@@ -86,6 +102,11 @@ char ecoTailleChaine(char ** chaine, int nvTaille);
 
 
 
+/*════════════════════════════════════════════════════════════════════════════*/
+/* ------------ Fonctions de création et de traitement de l'arbre ----------- */
+/*════════════════════════════════════════════════════════════════════════════*/
+
+
 /* -------------------------------------------------------------------------- */
 /* creerElemArbre                                                             */
 /*       Creer un nouvel element vide dans l'arbre                            */
@@ -109,6 +130,50 @@ elemArbre_t * creerElemArbre();
 elemArbre_t * creerArbreNotaAlgebrique(char * notation);
 
 
+/* -------------------------------------------------------------------------- */
+/* rechercherValeur                                                           */
+/*       Recherche dans l'arbre l'élément contenant la valeur passée          */
+/*                                                                            */
+/* En entrée: arbre (elemArbre_t *) : pointeur sur la racine de l'arbre       */
+/*            valeur (char) : valeur à rechercher dans l'arbre                */
+/*                                                                            */
+/* En sortie: cour (elemArbre_t *) : pointeur sur l'element contenant la      */
+/*                           valeur, NULL si la valeur n'a pas été trouvée    */
+/* -------------------------------------------------------------------------- */
+elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur);
+
+
+/* -------------------------------------------------------------------------- */
+/* insererFils                                                                */
+/*       Insère un fils contenant nouvValeur à l'élément contenant valeurPere */
+/*       s'il existe                                                          */
+/*                                                                            */
+/* En entrée: arbre (elemArbre_t *) : pointeur sur la racine de l'arbre       */
+/*            valeurPere (char) : valeur à chercher dans l'arbre pour y       */
+/*                                inserer le fils                             */
+/*            nouvValeur (char) : valeur du nouvel element fils               */
+/*                                                                            */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
+/* -------------------------------------------------------------------------- */
+char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur);
+
+
+/* -------------------------------------------------------------------------- */
+/* libererArbre                                                               */
+/*            Libere la memoire, free tous les éléments de l'arbre            */
+/*                                                                            */
+/* En entrée: arbre (elemArbre_t **) : pointeur sur la racine de l'arbre      */
+/*                                     passé par adresse                      */
+/*                                                                            */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
+/* -------------------------------------------------------------------------- */
+char libererArbre(elemArbre_t ** arbre);
+
+
+
+/*════════════════════════════════════════════════════════════════════════════*/
+/* -------------- Fonctions liées à la representation postfixée ------------- */
+/*════════════════════════════════════════════════════════════════════════════*/
 
 
 /* -------------------------------------------------------------------------- */
@@ -150,47 +215,10 @@ void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem);
 void afficherRepres(char * repres);
 
 
-/* -------------------------------------------------------------------------- */
-/* rechercherValeur                                                           */
-/*       Recherche dans l'arbre l'élément contenant la valeur passée          */
-/*                                                                            */
-/* En entrée: arbre (elemArbre_t *) : pointeur sur la racine de l'arbre       */
-/*            valeur (char) : valeur à rechercher dans l'arbre                */
-/*                                                                            */
-/* En sortie: cour (elemArbre_t *) : pointeur sur l'element contenant la      */
-/*                           valeur, NULL si la valeur n'a pas été trouvée    */
-/* -------------------------------------------------------------------------- */
-elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur);
 
-
-/* -------------------------------------------------------------------------- */
-/* insererFils                                                                */
-/*       Insère un fils contenant nouvValeur à l'élément contenant valeurPere */
-/*       s'il existe                                                          */
-/*                                                                            */
-/* En entrée: arbre (elemArbre_t *) : pointeur sur la racine de l'arbre       */
-/*            valeurPere (char) : valeur à chercher dans l'arbre pour y       */
-/*                                inserer le fils                             */
-/*            nouvValeur (char) : valeur du nouvel element fils               */
-/*                                                                            */
-/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
-/* -------------------------------------------------------------------------- */
-char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur);
-
-
-
-/* -------------------------------------------------------------------------- */
-/* libererArbre                                                               */
-/*            Libere la memoire, free tous les éléments de l'arbre            */
-/*                                                                            */
-/* En entrée: arbre (elemArbre_t **) : pointeur sur la racine de l'arbre      */
-/*                                     passé par adresse                      */
-/*                                                                            */
-/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
-/* -------------------------------------------------------------------------- */
-char libererArbre(elemArbre_t ** arbre);
-
-
+/*════════════════════════════════════════════════════════════════════════════*/
+/* --------------------- Fonctions d'affichage de l'arbre ------------------- */
+/*════════════════════════════════════════════════════════════════════════════*/
 
 
 /* -------------------------------------------------------------------------- */
@@ -256,8 +284,9 @@ void afficherArbrePref(elemArbre_t * arbre);
 
 
 
-
+/*════════════════════════════════════════════════════════════════════════════*/
 /* ------------- Fonctions utilitaires de traitement de chaines ------------- */
+/*════════════════════════════════════════════════════════════════════════════*/
 
 
 /* -------------------------------------------------------------------------- */

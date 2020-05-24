@@ -11,6 +11,11 @@
 #include "arbre.h"
 
 
+/*════════════════════════════════════════════════════════════════════════════*/
+/* ------------- Fonctions de création de la notation algébrique ------------ */
+/*════════════════════════════════════════════════════════════════════════════*/
+
+
 char * recupNotaAlgebrique(char * filename) {
 	FILE * file = fopen(filename, "r");
 	int taille = 100;
@@ -85,39 +90,9 @@ char ecoTailleChaine(char ** chaine, int nvTaille) {
 
 
 
-// enleve les characteres de fin de chaine \r et \n
-void charFinChaine(char * chaine, int * taille) {
-	if (chaine[*taille-1] == '\n') {
-		chaine[*taille-1] = '\0';
-		(*taille) -= 1;
-	}
-
-	if (chaine[*taille-1] == '\r') {
-		chaine[*taille-1] = '\0';
-		(*taille) -= 1;
-	}
-}
-
-//Renvoie la taille de la chaine passée en parametre
-//ne compte pas le '\0'
-int tailleChaine(char * chaine) {
-	int taille = 0;
-
-	while (chaine[taille] != '\0') {
-			taille++;
-	}
-	return taille;
-}
-
-
-void copierChaine(char * chaine1, char * chaine2) {
-	int i = 0;
-
-	while (chaine2[i] != '\0') {
-		chaine1[i] = chaine2[i];
-		i++;
-	}
-}
+/*════════════════════════════════════════════════════════════════════════════*/
+/* ------------ Fonctions de création et de traitement de l'arbre ----------- */
+/*════════════════════════════════════════════════════════════════════════════*/
 
 
 elemArbre_t * creerElemArbre() {
@@ -198,97 +173,85 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 }
 
 
-void afficherArbre(elemArbre_t * arbre) {
-	if (arbre != NULL) {
-
-		char fin = 0;
-		int niveau = 0;
-		char * tabFreres = (char *)calloc(255, sizeof(char));
-
-		if (tabFreres != NULL) {
-
-			elemArbre_t * cour = arbre;
-			pile_t * pileArbre = initPile(10);
-
-			actuTabFreres(cour, niveau, tabFreres);
-
-			if (pileArbre != NULL) {
-				printf("Arbre :\n.\n");
-				while (!fin) {
-
-					while (cour != NULL) {
-						afficherValeur(cour, niveau, tabFreres);
-
-						empiler(pileArbre, cour);
-						cour = cour->fils;
-						niveau += 1;
-						actuTabFreres(cour, niveau, tabFreres);
-					}
-
-					if (!estVidePile(pileArbre)) {
-						depiler(pileArbre, &cour);
-						niveau -= 1;
-						cour = cour->frere;
-						actuTabFreres(cour, niveau, tabFreres);
-
-					} else {
-						fin = 1;
-					}	
-				}
-				libererPile(pileArbre);
-			}
-		}
-		free(tabFreres);
-	}
-}
-
-
-// variante graphique
-// "╠══ "
-// "║   "
-// "╚══ "
-// "    "
-void afficherValeur(elemArbre_t * elemArbre, int niveau, char * tabFreres) {
-	int i = 0;
-	for (i=0; i<niveau; i++) {
-
-		if (tabFreres[i] == 0)
-			printf("    ");
-		else
-			printf("│   ");
-	}
-
-	if (elemArbre->frere != NULL)
-		printf("├── ");
-	else
-		printf("└── ");
-
-	printf("%c\n", elemArbre->valeur);
-}
-/*Fonctions a demander a l'utilisateur de la bibliotheque :
-inserer un element
-liberer un element
-afficher un element, cette fonction doit retourner une chaine caractere correspondant a la valeur (qui peut etre de nimporte quel type)*/
-
-
-void actuTabFreres(elemArbre_t * cour, int niveau, char * tabFreres) {
-	if (cour != NULL) {
-		if (cour->frere == NULL)
-			tabFreres[niveau] = 0;
-		else
-			tabFreres[niveau] = 1;
-	}
-}
-
-
-void afficherArbrePost(elemArbre_t * arbre) {
+elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
 	char fin = 0;
+	char trouve = 0;
 
 	elemArbre_t * cour = arbre;
 	pile_t * pileArbre = initPile(10);
 
 	if (pileArbre != NULL) {
-		printf("Représentation postfixée :\n\t");
+		while (!fin) {
+
+			while (cour != NULL && !trouve) {
+
+				if (cour->valeur == valeur) {
+					trouve = 1;
+
+				} else {
+					empiler(pileArbre, cour);
+					cour = cour->fils;
+				}
+			}
+
+			if (!estVidePile(pileArbre) && !trouve) {
+				depiler(pileArbre, &cour);
+				cour = cour->frere;
+
+			} else {
+				fin = 1;
+			}
+		}
+		libererPile(pileArbre);
+	}
+
+	if (!trouve) {
+		printf("La valeur n'a pas été trouvée\n");
+		cour = NULL;
+	}
+	return cour;
+}
+
+
+char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
+	char codeErreur = 0;
+
+	elemArbre_t * nouvElem = creerElemArbre();
+
+	if (nouvElem != NULL) {
+		nouvElem->valeur = nouvValeur;
+
+		elemArbre_t * cour = rechercherValeur(arbre, valeurPere);
+		elemArbre_t ** prec = &cour->fils;
+		cour = cour->fils;
+
+		if (cour != NULL) {
+
+			while (cour != NULL) {
+				prec = &cour->frere;
+				cour = cour->frere;
+			}
+
+		}
+		*prec = nouvElem;
+
+	} else {
+		codeErreur = 1;
+	}
+	return codeErreur;
+}
+
+
+char libererArbre(elemArbre_t ** arbre) {
+	char fin = 0;
+	char codeErreur = 0;
+
+	elemArbre_t * prec = *arbre;
+	elemArbre_t * cour = *arbre;
+	pile_t * pileArbre = initPile(10);
+
+
+	if (*arbre != NULL && pileArbre != NULL) {
 		while (!fin) {
 
 			while (cour != NULL) {
@@ -296,18 +259,33 @@ void afficherArbrePost(elemArbre_t * arbre) {
 				cour = cour->fils;
 			}
 
-			depiler(pileArbre, &cour);
-			printf("%c", cour->valeur);
-			cour = cour->frere;
+			if (!estVidePile(pileArbre)) {
+				depiler(pileArbre, &cour);
+				prec = cour;
+				cour = cour->frere;
+				free(prec);
 
-			if (estVidePile(pileArbre) && cour == NULL) {
+			} else {
 				fin = 1;
 			}
 		}
-		printf("\n");
-		libererPile(pileArbre);
+
+	} else {
+		codeErreur = 1;
 	}
+
+	libererPile(pileArbre);
+
+	(*arbre) = NULL;
+
+	return codeErreur;
 }
+
+
+
+/*════════════════════════════════════════════════════════════════════════════*/
+/* -------------- Fonctions liées à la representation postfixée ------------- */
+/*════════════════════════════════════════════════════════════════════════════*/
 
 
 char * creerRepresPost(elemArbre_t * arbre) {
@@ -379,6 +357,126 @@ void afficherRepres(char * repres) {
 }
 
 
+
+/*════════════════════════════════════════════════════════════════════════════*/
+/* --------------------- Fonctions d'affichage de l'arbre ------------------- */
+/*════════════════════════════════════════════════════════════════════════════*/
+
+
+void afficherArbre(elemArbre_t * arbre) {
+	if (arbre != NULL) {
+
+		char fin = 0;
+		int niveau = 0;
+		char * tabFreres = (char *)calloc(255, sizeof(char));
+
+		if (tabFreres != NULL) {
+
+			elemArbre_t * cour = arbre;
+			pile_t * pileArbre = initPile(10);
+
+			actuTabFreres(cour, niveau, tabFreres);
+
+			if (pileArbre != NULL) {
+				printf("Arbre :\n.\n");
+				while (!fin) {
+
+					while (cour != NULL) {
+						afficherValeur(cour, niveau, tabFreres);
+
+						empiler(pileArbre, cour);
+						cour = cour->fils;
+						niveau += 1;
+						actuTabFreres(cour, niveau, tabFreres);
+					}
+
+					if (!estVidePile(pileArbre)) {
+						depiler(pileArbre, &cour);
+						niveau -= 1;
+						cour = cour->frere;
+						actuTabFreres(cour, niveau, tabFreres);
+
+					} else {
+						fin = 1;
+					}	
+				}
+				libererPile(pileArbre);
+			}
+		}
+		free(tabFreres);
+	}
+}
+
+
+// variante graphique ╠══ ║ ╚══ 
+void afficherValeur(elemArbre_t * elemArbre, int niveau, char * tabFreres) {
+	int i = 0;
+	for (i=0; i<niveau; i++) {
+
+		if (tabFreres[i] == 0) {
+			printf("    ");
+		}
+		else {
+			printf("│   ");
+		}
+	}
+
+	if (elemArbre->frere != NULL) {
+		printf("├── ");
+	}
+	else {
+		printf("└── ");
+	}
+
+	printf("%c\n", elemArbre->valeur);
+}
+/*Fonctions a demander a l'utilisateur de la bibliotheque :
+inserer un element
+liberer un element
+afficher un element, cette fonction doit retourner une chaine caractere correspondant a la valeur (qui peut etre de nimporte quel type)*/
+
+
+void actuTabFreres(elemArbre_t * cour, int niveau, char * tabFreres) {
+	if (cour != NULL) {
+		if (cour->frere == NULL) {
+			tabFreres[niveau] = 0;
+		}
+		else {
+			tabFreres[niveau] = 1;
+		}
+	}
+}
+
+
+void afficherArbrePost(elemArbre_t * arbre) {
+	char fin = 0;
+
+	elemArbre_t * cour = arbre;
+	pile_t * pileArbre = initPile(10);
+
+	if (pileArbre != NULL) {
+		printf("Représentation postfixée :\n\t");
+		while (!fin) {
+
+			while (cour != NULL) {
+				empiler(pileArbre, cour);
+				cour = cour->fils;
+			}
+
+			depiler(pileArbre, &cour);
+			printf("%c", cour->valeur);
+			cour = cour->frere;
+
+			if (estVidePile(pileArbre) && cour == NULL) {
+				fin = 1;
+			}
+		}
+		printf("\n");
+		libererPile(pileArbre);
+	}
+}
+
+
 void afficherArbrePref(elemArbre_t * arbre) {
 	char fin = 0;
 
@@ -411,112 +509,42 @@ void afficherArbrePref(elemArbre_t * arbre) {
 
 
 
-elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
-	char fin = 0;
-	char trouve = 0;
+/*════════════════════════════════════════════════════════════════════════════*/
+/* ------------- Fonctions utilitaires de traitement de chaines ------------- */
+/*════════════════════════════════════════════════════════════════════════════*/
 
-	elemArbre_t * cour = arbre;
-	pile_t * pileArbre = initPile(10);
 
-	if (pileArbre != NULL) {
-		while (!fin) {
-
-			while (cour != NULL && !trouve) {
-
-				if (cour->valeur == valeur) {
-					trouve = 1;
-
-				} else {
-					empiler(pileArbre, cour);
-					cour = cour->fils;
-				}
-			}
-
-			if (!estVidePile(pileArbre) && !trouve) {
-				depiler(pileArbre, &cour);
-				cour = cour->frere;
-
-			} else {
-				fin = 1;
-			}
-		}
-		libererPile(pileArbre);
+// enleve les characteres de fin de chaine \r et \n
+void charFinChaine(char * chaine, int * taille) {
+	if (chaine[*taille-1] == '\n') {
+		chaine[*taille-1] = '\0';
+		(*taille) -= 1;
 	}
 
-	if (!trouve) {
-		printf("La valeur n'a pas été trouvée\n");
-		cour = NULL;
+	if (chaine[*taille-1] == '\r') {
+		chaine[*taille-1] = '\0';
+		(*taille) -= 1;
 	}
-	return cour;
 }
 
 
-char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
-	char codeErreur = 0;
+//Renvoie la taille de la chaine passée en parametre
+//ne compte pas le '\0'
+int tailleChaine(char * chaine) {
+	int taille = 0;
 
-	elemArbre_t * nouvElem = creerElemArbre();
-
-	if (nouvElem != NULL) {
-		nouvElem->valeur = nouvValeur;
-
-		elemArbre_t * cour = rechercherValeur(arbre, valeurPere);
-		elemArbre_t ** prec = &cour->fils;
-		cour = cour->fils;
-
-		if (cour != NULL) {
-
-			while (cour != NULL) {
-				prec = &cour->frere;
-				cour = cour->frere;
-			}
-
-		}
-		*prec = nouvElem;
-
-	} else {
-		codeErreur = 1;
+	while (chaine[taille] != '\0') {
+			taille++;
 	}
-	return codeErreur;
+	return taille;
 }
 
 
+void copierChaine(char * chaine1, char * chaine2) {
+	int i = 0;
 
-
-char libererArbre(elemArbre_t ** arbre) {
-	char fin = 0;
-	char codeErreur = 0;
-
-	elemArbre_t * prec = *arbre;
-	elemArbre_t * cour = *arbre;
-	pile_t * pileArbre = initPile(10);
-
-
-	if (*arbre != NULL && pileArbre != NULL) {
-		while (!fin) {
-
-			while (cour != NULL) {
-				empiler(pileArbre, cour);
-				cour = cour->fils;
-			}
-
-			if (!estVidePile(pileArbre)) {
-				depiler(pileArbre, &cour);
-				prec = cour;
-				cour = cour->frere;
-				free(prec);
-
-			} else {
-				fin = 1;
-			}
-		}
-
-	} else {
-		codeErreur = 1;
+	while (chaine2[i] != '\0') {
+		chaine1[i] = chaine2[i];
+		i++;
 	}
-
-	libererPile(pileArbre);
-
-	(*arbre) = NULL;
-
-	return codeErreur;
 }
