@@ -13,26 +13,76 @@
 
 char * recupNotaAlgebrique(char * filename) {
 	FILE * file = fopen(filename, "r");
-	int    taille = 0;
-	char   ligne[255];
-	char * notation = NULL;
+	int taille = 5;
 
-	if (file != NULL) {
-		fgets(ligne, 255, file);
+	char caractere = 0;
+	int i = 0;
 
-		taille = tailleChaine(ligne);
-		charFinChaine(ligne, &taille);
+	char * notation = (char *)calloc(taille, sizeof(char));;
 
-		notation = (char *)calloc(taille+1, sizeof(char));
+	if (file != NULL && notation != NULL) {
+		
+		do {
 
-		if (notation != NULL) {
-			copierChaine(notation, ligne);
-		}
+			caractere = fgetc(file);
+
+			if (caractere >= 33 && caractere <= 126) {
+
+				if (i == taille - 2) {
+					actualiserTailleChaine(&notation, &taille);
+				}
+
+				if (notation != NULL) {
+					notation[i] = caractere;
+					i++;
+				}
+			}
+
+
+		} while (caractere != EOF && notation != NULL);
+
+		notation[i] = '\0';
+		ecoTailleChaine(&notation, i+1);
 
 		fclose(file);
 	}
 	return notation;
 }
+
+
+char actualiserTailleChaine(char ** chaine, int * taille) {
+	char codeErreur = 0;
+
+	int nvTaille = (3 * *taille) / 2 + 1;
+	char * nvChaine = (char *)realloc(*chaine, nvTaille * sizeof(char));
+
+	if (nvChaine != NULL) {
+		*chaine = nvChaine;
+		*taille = nvTaille;
+
+	} else {
+		codeErreur = 1;
+		free(*chaine);
+	}
+
+	return codeErreur;
+}
+
+
+char ecoTailleChaine(char ** chaine, int nvTaille) {
+	char codeErreur = 0;
+	char * nvChaine = (char *)realloc(*chaine, nvTaille * sizeof(char));
+
+	if (nvChaine != NULL) {
+		*chaine = nvChaine;
+
+	} else {
+		codeErreur = 1;
+	}
+
+	return codeErreur;
+}
+
 
 
 // enleve les characteres de fin de chaine \r et \n

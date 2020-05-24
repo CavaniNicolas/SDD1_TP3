@@ -56,6 +56,37 @@ char * recupNotaAlgebrique(char * filename);
 
 
 /* -------------------------------------------------------------------------- */
+/* actualiserTailleChaine                                                     */
+/*       Agrandit la chaine de caractères si celle ci est trop petite         */
+/*       Si le redimmensionnement n'est pas possible, la chaine est libérée   */
+/*       et le codeErreur est retourné                                        */
+/*                                                                            */
+/* En entrée: chaine (char **) : pointeur sur la chaine à redimmensionner     */
+/*                               (passé par addresse)                         */
+/*            taille (int *) : taille actuelle de la chaine (par adresse)     */
+/*                                                                            */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
+/* -------------------------------------------------------------------------- */
+char actualiserTailleChaine(char ** chaine, int * taille);
+
+
+/* -------------------------------------------------------------------------- */
+/* ecoTailleChaine                                                            */
+/*       Redimmensionne la chaine de caractère pour libérer la mémoire non    */
+/*       utilisée en fin de chaine si cela est possible. Sinon, ne fait rien  */
+/*       à la chaine et le codeErreur est retourné                            */
+/*                                                                            */
+/* En entrée: chaine (char **) : pointeur sur la chaine à redimmensionner     */
+/*                               (passé par addresse)                         */
+/*            nvTaille (int) : nouvelle taille de la chaine de caractères     */
+/*                                                                            */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
+/* -------------------------------------------------------------------------- */
+char ecoTailleChaine(char ** chaine, int nvTaille);
+
+
+
+/* -------------------------------------------------------------------------- */
 /* creerElemArbre                                                             */
 /*       Creer un nouvel element vide dans l'arbre                            */
 /*       La valeur de cet element n'est pas initilisée                        */
