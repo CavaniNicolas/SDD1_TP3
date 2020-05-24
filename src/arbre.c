@@ -325,15 +325,11 @@ char * creerRepresPost(elemArbre_t * arbre) {
 
 // attention a la taille max de represPost
 void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem) {
-	int compteur = 0;
-	elemArbre_t * cour = elemArbre->fils;
 
 	repres[nbElem] = elemArbre->valeur;
 
-	while (cour != NULL) {
-		compteur ++;
-		cour = cour->frere;
-	}
+	int compteur = compterFils(elemArbre);
+	char * compteurChar = entierEnChaine(compteur);
 
 	// fonction a modifier pour pouvoir prendre en compte les fratries de 10 et plus
 	if (compteur > 9) {
@@ -341,19 +337,26 @@ void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem) {
 	}
 
 	repres[nbElem+1] = compteur + '0';
+
+	free(compteurChar);
+}
+
+
+int compterFils(elemArbre_t * elemArbre) {
+	int compteur = 0;
+	elemArbre_t * cour = elemArbre->fils;
+
+	while (cour != NULL) {
+		compteur ++;
+		cour = cour->frere;
+	}
+
+	return compteur;
 }
 
 
 void afficherRepres(char * repres) {
-	int i = 0;
-
-	printf("Représentation postfixée :\n\t");
-
-	while (repres[i] != '\0') {
-		printf("(%c,%c)", repres[i], repres[i+1]);
-		i += 2;
-	}
-	printf("\n");
+	printf("%s\n", repres);
 }
 
 
@@ -546,5 +549,50 @@ void copierChaine(char * chaine1, char * chaine2) {
 	while (chaine2[i] != '\0') {
 		chaine1[i] = chaine2[i];
 		i++;
+	}
+}
+
+
+char * entierEnChaine(int entier) {
+	int i = 0;
+	int taille = 1;
+	int entier2 = entier;
+
+	if (entier2 > 0) {
+		while (entier2 > 0) {
+			taille ++;
+			entier2 = entier2 / 10;
+		}
+	} else {
+		taille = 2;
+	}
+
+	char * chaine = (char *)malloc(taille * sizeof(char));
+
+	if (chaine != NULL) {
+
+		for (i=0; i<taille; i++) {
+			chaine[i] = (entier % 10) + '0';
+			entier = entier / 10;
+		}
+		i--;
+
+		chaine[i] = '\0';
+	}
+
+	inverserChaine(chaine);
+
+	return chaine;
+}
+
+
+void inverserChaine(char * chaine) {
+	int taille = tailleChaine(chaine);
+	char charTmp = 0;
+
+	for (int i=0; i<taille/2; i++) {
+		charTmp = chaine[i];
+		chaine[i] = chaine[taille-i-1];
+		chaine[taille-i-1] = charTmp;
 	}
 }

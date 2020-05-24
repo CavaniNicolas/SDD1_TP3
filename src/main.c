@@ -27,6 +27,7 @@ int main() {
 
 			char * represPost = creerRepresPost(arbre);
 			if (represPost != NULL) {
+				printf("Représentation postfixée :\n\t");
 				afficherRepres(represPost);
 			}
 

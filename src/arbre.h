@@ -21,6 +21,7 @@
 /* -------------- Fonctions liées à la representation postfixée ------------- */
 /*  - creerRepresPost                                                         */
 /*  - ajouterValeurRepres                                                     */
+/*  - compterFils                                                             */
 /*  - afficherRepres                                                          */
 /*                                                                            */
 /* --------------------- Fonctions d'affichage de l'arbre ------------------- */
@@ -34,6 +35,8 @@
 /*  - charFinChaine                                                           */
 /*  - tailleChaine                                                            */
 /*  - copierChaine                                                            */
+/*  - entierEnChaine                                                          */
+/*  - inverserChaine                                                          */
 /* -------------------------------------------------------------------------- */
 
 
@@ -205,6 +208,18 @@ void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem);
 
 
 /* -------------------------------------------------------------------------- */
+/* compterFils                                                                */
+/*       Compte le nombre de fils de l'élément passé en paramètre             */
+/*                                                                            */
+/* En entrée: elemArbre (elemArbre_t *) : élément dont il faut compter le     */
+/*                                        nombre de fils                      */
+/*                                                                            */
+/* En sortie: compeur (int) : nombre de fils de l'élément                     */
+/* -------------------------------------------------------------------------- */
+int compterFils(elemArbre_t * elemArbre);
+
+
+/* -------------------------------------------------------------------------- */
 /* afficherRepres                                                             */
 /*       Affiche la representation passée en parametre                        */
 /*                                                                            */
@@ -323,6 +338,29 @@ int tailleChaine(char * chaine);
 /* En sortie: (void)                                                          */
 /* -------------------------------------------------------------------------- */
 void copierChaine(char * chaine1, char * chaine2);
+
+
+/* -------------------------------------------------------------------------- */
+/* entierEnChaine                                                             */
+/*       Transforme un entier passé en paramètre en chaine de caractères      */
+/*       La chaine contenant cet entier est allouée dans cette fonction       */
+/*                                                                            */
+/* En entrée: entier (int) : entier à transformer                             */
+/*                                                                            */
+/* En sortie: chaine (char *) : contient l'entier passé en paramètre          */
+/* -------------------------------------------------------------------------- */
+char * entierEnChaine(int entier);
+
+
+/* -------------------------------------------------------------------------- */
+/* inverserChaine                                                             */
+/*       Inverse la chaine de caractères                                      */
+/*                                                                            */
+/* En entrée: chaine (char *) : chaine à inverser                             */
+/*                                                                            */
+/* En sortie: (void)                                                          */
+/* -------------------------------------------------------------------------- */
+void inverserChaine(char * chaine);
 
 
 #endif
