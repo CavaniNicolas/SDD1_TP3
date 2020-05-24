@@ -211,11 +211,11 @@ void afficherArbre(elemArbre_t * arbre);
 /*                                                                            */
 /* En entrée: elemArbre (elemArbre_t *) : element de l'arbre à afficher       */
 /*            niveau (int) : niveau dans l'arbre de la valeur a afficher      */
-/*            tabFreres (int *) : tableau de codes Freres pour l'affichage    */
+/*            tabFreres (char *) : tableau de booléens Freres pour l'affichage*/
 /*                                                                            */
 /* En sortie: (void)                                                          */
 /* -------------------------------------------------------------------------- */
-void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres);
+void afficherValeur(elemArbre_t * elemArbre, int niveau, char * tabFreres);
 
 
 /* -------------------------------------------------------------------------- */
@@ -226,11 +226,11 @@ void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres);
 /*                                                                            */
 /* En entrée: cour (elemArbre_t *) : element courant de l'arbre à actualiser  */
 /*            niveau (int) : niveau dans l'arbre de la valeur a actualiser    */
-/*            tabFreres (int *) : tableau de codes Freres pour l'affichage    */
+/*            tabFreres (char *) : tableau de booléens Freres pour l'affichage*/
 /*                                                                            */
 /* En sortie: (void)                                                          */
 /* -------------------------------------------------------------------------- */
-void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres);
+void actuTabFreres(elemArbre_t * cour, int niveau, char * tabFreres);
 
 
 /* -------------------------------------------------------------------------- */

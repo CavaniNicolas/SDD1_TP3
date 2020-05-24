@@ -13,7 +13,7 @@
 
 char * recupNotaAlgebrique(char * filename) {
 	FILE * file = fopen(filename, "r");
-	int taille = 5;
+	int taille = 100;
 
 	char caractere = 0;
 	int i = 0;
@@ -203,7 +203,7 @@ void afficherArbre(elemArbre_t * arbre) {
 
 		char fin = 0;
 		int niveau = 0;
-		int * tabFreres = (int *)calloc(255, sizeof(int));
+		char * tabFreres = (char *)calloc(255, sizeof(char));
 
 		if (tabFreres != NULL) {
 
@@ -248,7 +248,7 @@ void afficherArbre(elemArbre_t * arbre) {
 // "║   "
 // "╚══ "
 // "    "
-void afficherValeur(elemArbre_t * elemArbre, int niveau, int * tabFreres) {
+void afficherValeur(elemArbre_t * elemArbre, int niveau, char * tabFreres) {
 	int i = 0;
 	for (i=0; i<niveau; i++) {
 
@@ -271,7 +271,7 @@ liberer un element
 afficher un element, cette fonction doit retourner une chaine caractere correspondant a la valeur (qui peut etre de nimporte quel type)*/
 
 
-void actuTabFreres(elemArbre_t * cour, int niveau, int * tabFreres) {
+void actuTabFreres(elemArbre_t * cour, int niveau, char * tabFreres) {
 	if (cour != NULL) {
 		if (cour->frere == NULL)
 			tabFreres[niveau] = 0;
