@@ -1,6 +1,5 @@
 #options
 CFLAGS = -Wall -Wextra -g -MMD
-LIB = -lm
 
 SRC = $(wildcard src/*.c) $(wildcard src/pilefile/*.c)
 OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
@@ -13,7 +12,7 @@ all: bin/executable
 #édition des liens
 bin/executable: $(OBJ)
 	@mkdir -p $(@D) #créer le dossier bin, s'il n'existe pas
-	cc -o $@ $^ $(LIB)
+	cc -o $@ $^
 
 #génère les fichiers .o (dans build) à partir des fichiers .c (dans src) du même nom
 #comppilation
