@@ -142,9 +142,9 @@ elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur);
 /*                                inserer le fils                             */
 /*            nouvValeur (char) : valeur du nouvel element fils               */
 /*                                                                            */
-/* En sortie: (void)                                                          */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
 /* -------------------------------------------------------------------------- */
-void insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur);
+char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur);
 
 
 
@@ -155,9 +155,9 @@ void insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur);
 /* En entrée: arbre (elemArbre_t **) : pointeur sur la racine de l'arbre      */
 /*                                     passé par adresse                      */
 /*                                                                            */
-/* En sortie: (void)                                                          */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
 /* -------------------------------------------------------------------------- */
-void libererArbre(elemArbre_t ** arbre);
+char libererArbre(elemArbre_t ** arbre);
 
 
 

@@ -401,7 +401,8 @@ elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
 }
 
 
-void insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
+char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
+	char codeErreur = 0;
 
 	elemArbre_t * nouvElem = creerElemArbre();
 
@@ -421,14 +422,19 @@ void insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
 
 		}
 		*prec = nouvElem;
+
+	} else {
+		codeErreur = 1;
 	}
+	return codeErreur;
 }
 
 
 
 
-void libererArbre(elemArbre_t ** arbre) {
+char libererArbre(elemArbre_t ** arbre) {
 	char fin = 0;
+	char codeErreur = 0;
 
 	elemArbre_t * prec = *arbre;
 	elemArbre_t * cour = *arbre;
@@ -451,11 +457,16 @@ void libererArbre(elemArbre_t ** arbre) {
 
 			} else {
 				fin = 1;
-			}	
+			}
 		}
+
+	} else {
+		codeErreur = 1;
 	}
 
 	libererPile(pileArbre);
 
 	(*arbre) = NULL;
+
+	return codeErreur;
 }
