@@ -306,7 +306,7 @@ char ajouterValeurRepres(char ** repres, elemArbre_t * elemArbre, int * nbElem, 
 	int tailleChar = tailleChaine(compteurChar);
 
 	// Il faut peut être redimmensionner le tableau s'il est trop petit
-	while (*nbElem > (*taille - tailleChar + 4)) {
+	while (*nbElem > (*taille - tailleChar - 4)) {
 		codeErreur = agrandirChaine(repres, taille);
 	}
 
