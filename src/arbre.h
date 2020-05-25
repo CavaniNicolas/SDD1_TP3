@@ -8,8 +8,6 @@
 /*                                                                            */
 /* ------------- Fonctions de création de la notation algébrique ------------ */
 /*  - recupNotaAlgebrique                                                     */
-/*  - actualiserTailleChaine                                                  */
-/*  - ecoTailleChaine                                                         */
 /*                                                                            */
 /* ------------ Fonctions de création et de traitement de l'arbre ----------- */
 /*  - creerElemArbre                                                          */
@@ -35,6 +33,8 @@
 /*  - charFinChaine                                                           */
 /*  - tailleChaine                                                            */
 /*  - copierChaine                                                            */
+/*  - agrandirChaine                                                          */
+/*  - ecoTailleChaine                                                         */
 /*  - entierEnChaine                                                          */
 /*  - inverserChaine                                                          */
 /* -------------------------------------------------------------------------- */
@@ -72,36 +72,6 @@ typedef struct elemArbre{
 /* En sortie: notation (char *) : chaine de caractères, notation algebrique   */
 /* -------------------------------------------------------------------------- */
 char * recupNotaAlgebrique(char * filename);
-
-
-/* -------------------------------------------------------------------------- */
-/* actualiserTailleChaine                                                     */
-/*       Agrandit la chaine de caractères si celle ci est trop petite         */
-/*       Si le redimmensionnement n'est pas possible, la chaine est libérée   */
-/*       et le codeErreur est retourné                                        */
-/*                                                                            */
-/* En entrée: chaine (char **) : pointeur sur la chaine à redimmensionner     */
-/*                               (passé par addresse)                         */
-/*            taille (int *) : taille actuelle de la chaine (par adresse)     */
-/*                                                                            */
-/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
-/* -------------------------------------------------------------------------- */
-char actualiserTailleChaine(char ** chaine, int * taille);
-
-
-/* -------------------------------------------------------------------------- */
-/* ecoTailleChaine                                                            */
-/*       Redimmensionne la chaine de caractère pour libérer la mémoire non    */
-/*       utilisée en fin de chaine si cela est possible. Sinon, ne fait rien  */
-/*       à la chaine et le codeErreur est retourné                            */
-/*                                                                            */
-/* En entrée: chaine (char **) : pointeur sur la chaine à redimmensionner     */
-/*                               (passé par addresse)                         */
-/*            nvTaille (int) : nouvelle taille de la chaine de caractères     */
-/*                                                                            */
-/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
-/* -------------------------------------------------------------------------- */
-char ecoTailleChaine(char ** chaine, int nvTaille);
 
 
 
@@ -195,16 +165,20 @@ char * creerRepresPost(elemArbre_t * arbre);
 /* -------------------------------------------------------------------------- */
 /* ajouterValeurRepres                                                        */
 /*       Remplie le tableau (la representation) avec la valeur courante       */
+/*       Le tableau est agrandit si il n'est pas assez grand                  */
 /*                                                                            */
-/* En entrée: repres (char) : chaine de caractere, representation (prefixée   */
+/* En entrée: repres (char **) : chaine de caractere, representation (prefixée*/
 /*                            ou postfixée)                                   */
 /*            elemArbre (elemArbre_t *) : element courant dont la valeur est  */
 /*                                        à inserer dans la representation    */
-/*            nbElem (int) : compteur, indice pour remplir le tableau         */
+/*            nbElem (int *) : compteur, indice pour remplir le tableau       */
+/*                           (par adresse)                                    */
+/*            taille (int *) : taille du tableau repres (par adresse)         */
 /*                                                                            */
-/* En sortie: (void)                                                          */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
 /* -------------------------------------------------------------------------- */
-void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem);
+char ajouterValeurRepres(char ** repres, elemArbre_t * elemArbre, int * nbElem,
+							int * taille);
 
 
 /* -------------------------------------------------------------------------- */
@@ -338,6 +312,36 @@ int tailleChaine(char * chaine);
 /* En sortie: (void)                                                          */
 /* -------------------------------------------------------------------------- */
 void copierChaine(char * chaine1, char * chaine2);
+
+
+/* -------------------------------------------------------------------------- */
+/* agrandirChaine                                                             */
+/*       Agrandit la chaine de caractères si celle ci est trop petite         */
+/*       Si le redimmensionnement n'est pas possible, la chaine est libérée   */
+/*       et le codeErreur est retourné                                        */
+/*                                                                            */
+/* En entrée: chaine (char **) : pointeur sur la chaine à redimmensionner     */
+/*                               (passé par addresse)                         */
+/*            taille (int *) : taille actuelle de la chaine (par adresse)     */
+/*                                                                            */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
+/* -------------------------------------------------------------------------- */
+char agrandirChaine(char ** chaine, int * taille);
+
+
+/* -------------------------------------------------------------------------- */
+/* ecoTailleChaine                                                            */
+/*       Redimmensionne la chaine de caractère pour libérer la mémoire non    */
+/*       utilisée en fin de chaine si cela est possible. Sinon, ne fait rien  */
+/*       à la chaine et le codeErreur est retourné                            */
+/*                                                                            */
+/* En entrée: chaine (char **) : pointeur sur la chaine à redimmensionner     */
+/*                               (passé par addresse)                         */
+/*            nvTaille (int) : nouvelle taille de la chaine de caractères     */
+/*                                                                            */
+/* En sortie: codeErreur (char) : booléen d'erreur, 1 si erreur 0 sinon       */
+/* -------------------------------------------------------------------------- */
+char ecoTailleChaine(char ** chaine, int nvTaille);
 
 
 /* -------------------------------------------------------------------------- */

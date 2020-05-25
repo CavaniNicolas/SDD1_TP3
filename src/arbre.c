@@ -18,7 +18,7 @@
 
 char * recupNotaAlgebrique(char * filename) {
 	FILE * file = fopen(filename, "r");
-	int taille = 100;
+	int  taille = 100;
 
 	char caractere = 0;
 	int i = 0;
@@ -28,13 +28,12 @@ char * recupNotaAlgebrique(char * filename) {
 	if (file != NULL && notation != NULL) {
 		
 		do {
-
 			caractere = fgetc(file);
 
 			if (caractere >= 33 && caractere <= 126) {
 
 				if (i == taille - 2) {
-					actualiserTailleChaine(&notation, &taille);
+					agrandirChaine(&notation, &taille);
 				}
 
 				if (notation != NULL) {
@@ -42,7 +41,6 @@ char * recupNotaAlgebrique(char * filename) {
 					i++;
 				}
 			}
-
 
 		} while (caractere != EOF && notation != NULL);
 
@@ -52,40 +50,6 @@ char * recupNotaAlgebrique(char * filename) {
 		fclose(file);
 	}
 	return notation;
-}
-
-
-char actualiserTailleChaine(char ** chaine, int * taille) {
-	char codeErreur = 0;
-
-	int nvTaille = (3 * *taille) / 2 + 1;
-	char * nvChaine = (char *)realloc(*chaine, nvTaille * sizeof(char));
-
-	if (nvChaine != NULL) {
-		*chaine = nvChaine;
-		*taille = nvTaille;
-
-	} else {
-		codeErreur = 1;
-		free(*chaine);
-	}
-
-	return codeErreur;
-}
-
-
-char ecoTailleChaine(char ** chaine, int nvTaille) {
-	char codeErreur = 0;
-	char * nvChaine = (char *)realloc(*chaine, nvTaille * sizeof(char));
-
-	if (nvChaine != NULL) {
-		*chaine = nvChaine;
-
-	} else {
-		codeErreur = 1;
-	}
-
-	return codeErreur;
 }
 
 
@@ -111,9 +75,9 @@ elemArbre_t * creerElemArbre() {
 
 
 elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
-	int i = 0;
+	int i          = 0;
 	int codeErreur = 0;
-	int taille = tailleChaine(notation);
+	int taille     = tailleChaine(notation);
 
 	pile_t * pileArbre = initPile(taille/2);
 
@@ -174,7 +138,7 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 
 
 elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
-	char fin = 0;
+	char fin    = 0;
 	char trouve = 0;
 
 	elemArbre_t * cour = arbre;
@@ -289,30 +253,39 @@ char libererArbre(elemArbre_t ** arbre) {
 
 
 char * creerRepresPost(elemArbre_t * arbre) {
-	char fin = 0;
-	int nbElem = 0;
+	char fin    = 0;   /* Booléen de fin */
+	int  nbElem = 0;   /* Indice pour remplir le tableau au fur et à mesure */
+	int  taille = 2; /* Taille du tableau */
 
+	/* Init de la pile et des pointeurs nécessaires */
 	elemArbre_t * cour = arbre;
 	pile_t * pileArbre = initPile(10);
-	char * represPost = (char *)calloc(100, sizeof(char));
+	char * represPost = (char *)malloc(taille * sizeof(char));
 
+	/* Si pas de problème de mémoire alors */
 	if (pileArbre != NULL && represPost != NULL) {
 		while (!fin) {
 
+			// Parcours classqiue de l'arbre
 			while (cour != NULL) {
 				empiler(pileArbre, cour);
 				cour = cour->fils;
 			}
 
+			// Chaque valeur est ajoutée a la representation
 			depiler(pileArbre, &cour);
-			ajouterValeurRepres(represPost, cour, nbElem);
-			nbElem += 2;
+			ajouterValeurRepres(&represPost, cour, &nbElem, &taille);
 			cour = cour->frere;
 
-			if (estVidePile(pileArbre) && cour == NULL) {
+			/* On s'arrète si la manip est finie ou si represPost a été free */
+			if ((estVidePile(pileArbre) && cour == NULL) && represPost != NULL) {
 				fin = 1;
 			}
 		}
+
+		/* Fin de chaine + redimmension pour economiser la mémoire */
+		represPost[nbElem] = '\0';
+		ecoTailleChaine(&represPost, nbElem+1);
 
 	} else {
 		free(represPost);
@@ -323,29 +296,61 @@ char * creerRepresPost(elemArbre_t * arbre) {
 }
 
 
-// attention a la taille max de represPost
-void ajouterValeurRepres(char * repres, elemArbre_t * elemArbre, int nbElem) {
+char ajouterValeurRepres(char ** repres, elemArbre_t * elemArbre, int * nbElem, int * taille) {
+	int  i          = 0;
+	char codeErreur = 0;
 
-	repres[nbElem] = elemArbre->valeur;
-
+	// On compte le nombre de fils de l'élément
 	int compteur = compterFils(elemArbre);
 	char * compteurChar = entierEnChaine(compteur);
 
-	// fonction a modifier pour pouvoir prendre en compte les fratries de 10 et plus
-	if (compteur > 9) {
-		compteur = 9;
+	// Il faut peut être redimmensionner le tableau s'il est trop petit
+	if (*nbElem > (*taille - 8)) {
+		codeErreur = agrandirChaine(repres, taille);
 	}
 
-	repres[nbElem+1] = compteur + '0';
+	// S'il n'y a pas eu d'erreur lors de l'aggrandissement de la chaine
+	if (!codeErreur) {
 
+		// La representation est directement remplie "(valeur,nbFils)(..."
+		*repres[*nbElem] = '(';
+		*repres[*nbElem+1] = elemArbre->valeur;
+		*repres[*nbElem+2] = ',';
+		*nbElem += 3;
+
+		// Ce qui permet alors d'entrer dans le tableau de caractères un nombre
+		// de fils supérieur ou égal à 10 (car plus de 1 seul caractère)
+		while (compteurChar[i] != '\0') {
+
+			// if (*nbElem > (*taille - 3)) {
+			// 	codeErreur = agrandirChaine(repres, taille);
+			// }
+			// if (!codeErreur) {
+
+				*repres[*nbElem] = compteurChar[i];
+				*nbElem += 1;
+				i++;
+			// }
+		}
+
+		*repres[*nbElem] = ')';
+		*nbElem += 1;
+
+	}
+
+	// On libère la chaine qui contenait le nombre de fils de l'élément
 	free(compteurChar);
+
+	return codeErreur;
 }
 
 
 int compterFils(elemArbre_t * elemArbre) {
 	int compteur = 0;
+	// On se place sur le premier fils
 	elemArbre_t * cour = elemArbre->fils;
 
+	// On parcourt tous les freres et incremente le compteur
 	while (cour != NULL) {
 		compteur ++;
 		cour = cour->frere;
@@ -369,8 +374,8 @@ void afficherRepres(char * repres) {
 void afficherArbre(elemArbre_t * arbre) {
 	if (arbre != NULL) {
 
-		char fin = 0;
-		int niveau = 0;
+		char   fin       = 0;
+		int    niveau    = 0;
 		char * tabFreres = (char *)calloc(255, sizeof(char));
 
 		if (tabFreres != NULL) {
@@ -414,6 +419,7 @@ void afficherArbre(elemArbre_t * arbre) {
 // variante graphique ╠══ ║ ╚══ 
 void afficherValeur(elemArbre_t * elemArbre, int niveau, char * tabFreres) {
 	int i = 0;
+
 	for (i=0; i<niveau; i++) {
 
 		if (tabFreres[i] == 0) {
@@ -441,12 +447,14 @@ afficher un element, cette fonction doit retourner une chaine caractere correspo
 
 void actuTabFreres(elemArbre_t * cour, int niveau, char * tabFreres) {
 	if (cour != NULL) {
+
 		if (cour->frere == NULL) {
 			tabFreres[niveau] = 0;
 		}
 		else {
 			tabFreres[niveau] = 1;
 		}
+
 	}
 }
 
@@ -458,9 +466,11 @@ void afficherArbrePost(elemArbre_t * arbre) {
 	pile_t * pileArbre = initPile(10);
 
 	if (pileArbre != NULL) {
+
 		printf("Représentation postfixée :\n\t");
 		while (!fin) {
 
+			// Parcours classique de l'arbre (en profondeur)
 			while (cour != NULL) {
 				empiler(pileArbre, cour);
 				cour = cour->fils;
@@ -474,8 +484,10 @@ void afficherArbrePost(elemArbre_t * arbre) {
 				fin = 1;
 			}
 		}
+
 		printf("\n");
 		libererPile(pileArbre);
+
 	}
 }
 
@@ -553,16 +565,52 @@ void copierChaine(char * chaine1, char * chaine2) {
 }
 
 
+char agrandirChaine(char ** chaine, int * taille) {
+	char codeErreur = 0;
+
+	int nvTaille = (3 * *taille) / 2 + 1;
+	char * nvChaine = (char *)realloc(*chaine, nvTaille * sizeof(char));
+
+	if (nvChaine != NULL) {
+		*chaine = nvChaine;
+		*taille = nvTaille;
+
+	} else {
+		codeErreur = 1;
+		free(*chaine);
+	}
+
+	return codeErreur;
+}
+
+
+char ecoTailleChaine(char ** chaine, int nvTaille) {
+	char codeErreur = 0;
+	char * nvChaine = (char *)realloc(*chaine, nvTaille * sizeof(char));
+
+	if (nvChaine != NULL) {
+		*chaine = nvChaine;
+
+	} else {
+		codeErreur = 1;
+	}
+
+	return codeErreur;
+}
+
+
 char * entierEnChaine(int entier) {
-	int i = 0;
-	int taille = 1;
+	int i       = 0;
+	int taille  = 1;
 	int entier2 = entier;
 
 	if (entier2 > 0) {
+
 		while (entier2 > 0) {
 			taille ++;
 			entier2 = entier2 / 10;
 		}
+
 	} else {
 		taille = 2;
 	}
@@ -587,7 +635,7 @@ char * entierEnChaine(int entier) {
 
 
 void inverserChaine(char * chaine) {
-	int taille = tailleChaine(chaine);
+	int  taille  = tailleChaine(chaine);
 	char charTmp = 0;
 
 	for (int i=0; i<taille/2; i++) {
