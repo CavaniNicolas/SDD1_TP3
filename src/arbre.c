@@ -26,7 +26,7 @@ char * recupNotaAlgebrique(char * filename) {
 	char * notation = (char *)calloc(taille, sizeof(char));;
 
 	if (file != NULL && notation != NULL) {
-		
+
 		do {
 			caractere = fgetc(file);
 
@@ -255,7 +255,7 @@ char libererArbre(elemArbre_t ** arbre) {
 char * creerRepresPost(elemArbre_t * arbre) {
 	char fin    = 0;   /* Booléen de fin */
 	int  nbElem = 0;   /* Indice pour remplir le tableau au fur et à mesure */
-	int  taille = 2; /* Taille du tableau */
+	int  taille = 100; /* Taille du tableau */
 
 	/* Init de la pile et des pointeurs nécessaires */
 	elemArbre_t * cour = arbre;
@@ -303,9 +303,10 @@ char ajouterValeurRepres(char ** repres, elemArbre_t * elemArbre, int * nbElem, 
 	// On compte le nombre de fils de l'élément
 	int compteur = compterFils(elemArbre);
 	char * compteurChar = entierEnChaine(compteur);
+	int tailleChar = tailleChaine(compteurChar);
 
 	// Il faut peut être redimmensionner le tableau s'il est trop petit
-	if (*nbElem > (*taille - 8)) {
+	while (*nbElem > (*taille - tailleChar + 4)) {
 		codeErreur = agrandirChaine(repres, taille);
 	}
 
@@ -313,27 +314,20 @@ char ajouterValeurRepres(char ** repres, elemArbre_t * elemArbre, int * nbElem, 
 	if (!codeErreur) {
 
 		// La representation est directement remplie "(valeur,nbFils)(..."
-		*repres[*nbElem] = '(';
-		*repres[*nbElem+1] = elemArbre->valeur;
-		*repres[*nbElem+2] = ',';
+		(*repres)[*nbElem] = '(';
+		(*repres)[*nbElem+1] = elemArbre->valeur;
+		(*repres)[*nbElem+2] = ',';
 		*nbElem += 3;
 
 		// Ce qui permet alors d'entrer dans le tableau de caractères un nombre
 		// de fils supérieur ou égal à 10 (car plus de 1 seul caractère)
 		while (compteurChar[i] != '\0') {
-
-			// if (*nbElem > (*taille - 3)) {
-			// 	codeErreur = agrandirChaine(repres, taille);
-			// }
-			// if (!codeErreur) {
-
-				*repres[*nbElem] = compteurChar[i];
-				*nbElem += 1;
-				i++;
-			// }
+			(*repres)[*nbElem] = compteurChar[i];
+			*nbElem += 1;
+			i++;
 		}
 
-		*repres[*nbElem] = ')';
+		(*repres)[*nbElem] = ')';
 		*nbElem += 1;
 
 	}
