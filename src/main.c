@@ -40,6 +40,10 @@ int main() {
 			}
 
 			insererFils(arbre, 'b', '2');
+			insererFils(arbre, 'b', '2');
+			insererFils(arbre, 'b', 'x');
+			insererFils(arbre, 'b', '1');
+			insererFils(arbre, 'b', '3');
 			afficherArbre(arbre);
 
 

@@ -264,15 +264,17 @@ char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
 			d'insérer le nouvel élément */
 			if (cour != NULL) {
 
-				/* On se place sur le dernier frère */
-				while (cour != NULL) {
-					prec = &cour->frere;
+				/* On se place sur le bon frère avant l'insertion (ordre alphabetique) */
+				while (cour != NULL && cour->valeur < nouvValeur) {
+					prec = &(cour->frere);
 					cour = cour->frere;
 				}
 
 			}
-			/* On insère le nouvel élément dans l'arbre */
+			/* On insère le nouvel élément dans l'arbre et on replace le pointeur
+			sur la suite des frères*/
 			*prec = nouvElem;
+			nouvElem->frere = cour;
 
 		/* La recherche n'a pas aboutie, on libère le nouvel élément */
 		} else {
