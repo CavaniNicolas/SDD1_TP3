@@ -1,1 +1,1 @@
-a*(b*(k*(h+u)+z)+f*m+x*(p+v+w))+t*r
+a*(b*(k*(h+u)+z)+f*m+x*(p+v+w))
