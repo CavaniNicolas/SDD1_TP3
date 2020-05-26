@@ -84,10 +84,6 @@ void afficherValeur(elemArbre_t * elemArbre, int niveau, char * tabFreres) {
 
 	printf("%c\n", elemArbre->valeur);
 }
-/*Fonctions a demander a l'utilisateur de la bibliotheque :
-inserer un element
-liberer un element
-afficher un element, cette fonction doit retourner une chaine caractere correspondant a la valeur (qui peut etre de nimporte quel type)*/
 
 
 void actuTabFreres(elemArbre_t * cour, int niveau, char * tabFreres) {
@@ -105,32 +101,40 @@ void actuTabFreres(elemArbre_t * cour, int niveau, char * tabFreres) {
 
 
 void afficherArbrePost(elemArbre_t * arbre) {
-	char fin = 0;
+	char fin = 0; /* Booléen de fin, 1 actions finies, 0 on continue */
 
-	elemArbre_t * cour = arbre;
-	pile_t * pileArbre = initPile(10);
+	elemArbre_t * cour = arbre; /* Pointeur courant pour parcourir l'arbre */
+	pile_t * pileArbre = initPile(10); /* Pile utilisée pour parcourir l'arbre */
 
+	/* Si l'allocation mémoire est réussie alors : */
 	if (pileArbre != NULL) {
 
 		printf("Représentation postfixée :\n\t");
+		/* Tant qu'on a pas finit les actions */
 		while (!fin) {
 
-			// Parcours classique de l'arbre (en profondeur)
+			/* Parcours en profondeur de l'arbre, on descend le plus possible
+			dans les fils */
 			while (cour != NULL) {
 				empiler(pileArbre, cour);
 				cour = cour->fils;
 			}
 
+			/* On dépile un élément, on l'affiche et on se place sur son frère */
+			/* Puisque tous les éléments de l'arbre rentrent dans la pile, on peut
+			les afficher au fur et à mesure que l'on dépile */
 			depiler(pileArbre, &cour);
-			printf("%c", cour->valeur);
+			printf("%c ", cour->valeur);
 			cour = cour->frere;
 
+			/* On s'arrète quand on a parcouru tout l'arbre */
 			if (estVidePile(pileArbre) && cour == NULL) {
 				fin = 1;
 			}
 		}
 
 		printf("\n");
+		/* Il faut libérer la mémoire utilisée par la pile */
 		libererPile(pileArbre);
 
 	}
@@ -148,7 +152,7 @@ void afficherArbrePref(elemArbre_t * arbre) {
 		while (!fin) {
 
 			while (cour != NULL) {
-				printf("%c", cour->valeur);
+				printf("%c ", cour->valeur);
 
 				empiler(pileArbre, cour);
 				cour = cour->fils;
@@ -162,7 +166,9 @@ void afficherArbrePref(elemArbre_t * arbre) {
 				fin = 1;
 			}
 		}
+
 		printf("\n");
 		libererPile(pileArbre);
+
 	}
 }

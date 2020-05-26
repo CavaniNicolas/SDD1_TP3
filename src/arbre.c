@@ -105,7 +105,7 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 	elemArbre_t * nouvElem = NULL; /* Pointeur sur les nouveaux éléments de l'arbre */
 	empiler(pileArbre, cour);
 
-	/* Si les allocations mémoires sont réussies alors : */
+	/* Si les allocations mémoires ont réussies alors : */
 	if (arbre != NULL && pileArbre != NULL) {
 
 		/* Tant qu'on a pas finit (fin de notation) et pas d'erreur */
@@ -318,7 +318,7 @@ char libererArbre(elemArbre_t ** arbre) {
 			/* Si la pile n'est pas vide (l'arbre n'est pas finit d'être parcouru),
 			on dépile un élément et on se place sur son frère.
 			Puisque tous les éléments de l'arbre rentrent dans la pile, on peut
-			les libérer au fur et à mesure que l'in dépile */
+			les libérer au fur et à mesure que l'on dépile */
 			if (!estVidePile(pileArbre)) {
 				depiler(pileArbre, &cour);
 				prec = cour;
