@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "arbre.h"
+#include "affichageArbre.h"
+#include "represPost.h"
 
 
 int main() {
