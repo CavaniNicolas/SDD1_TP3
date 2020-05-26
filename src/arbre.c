@@ -94,7 +94,7 @@ elemArbre_t * creerElemArbre() {
 
 elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 	int i          = 0; /* Compteur pour parcourir notation et remplir l'arbre */
-	int codeErreur = 0; /* Code d'erreur, 0 si pas d'erreur, 1 sinon*/
+	int codeErreur = 0; /* Code d'erreur, 0 si pas d'erreur, 1 sinon */
 	int taille     = tailleChaine(notation); /* Taille du tableau notation */
 
 	pile_t * pileArbre = initPile(taille/2); /* Pile utilisée pour parcourir l'arbre */
@@ -193,8 +193,8 @@ elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
 		/* Tant qu'on a pas finit faire : */
 		while (!fin) {
 
-			/* Descente en profondeur, on descend le plus possible dans les fils
-			ou tant qu'on a pas trouvé la valeur */
+			/* Parcours en profondeur de l'arbre, on descend le plus possible
+			dans les fils ou tant qu'on a pas trouvé la valeur */
 			while (cour != NULL && !trouve) {
 
 				/* Vérification de la valeur, si on la trouve en descendant */
@@ -238,69 +238,108 @@ elemArbre_t * rechercherValeur(elemArbre_t * arbre, char valeur) {
 
 
 char insererFils(elemArbre_t * arbre, char valeurPere, char nouvValeur) {
-	char codeErreur = 0;
+	char codeErreur = 0; /* Code d'erreur, 0 si pas d'erreur, 1 sinon*/
 
+	/* Pointeur sur le nouvel élément à insérer */
 	elemArbre_t * nouvElem = creerElemArbre();
 
+	/* Si l'allocation mémoire est réussie alors : */
 	if (nouvElem != NULL) {
+		/* On rempli le champ valeur de l'élément */
 		nouvElem->valeur = nouvValeur;
 
+		/* On effectue la recherche du père du nouvel élément à insérer */
+		/* cour est le pointeur courant parcourant les fils de l'élément trouvé */
 		elemArbre_t * cour = rechercherValeur(arbre, valeurPere);
-		elemArbre_t ** prec = &cour->fils;
-		cour = cour->fils;
 
+		/* Si la recherche a aboutie */		
 		if (cour != NULL) {
 
-			while (cour != NULL) {
-				prec = &cour->frere;
-				cour = cour->frere;
+			/* prec est le pointeur précédent cour, la où il faudra insérer le nouvel élément */
+			/* Au debut, on considère que cour n'a pas de fils */
+			elemArbre_t ** prec = &(cour->fils);
+			cour = cour->fils;
+
+			/* Si cour a un fils, il faut se placer sur le dernier frère avant
+			d'insérer le nouvel élément */
+			if (cour != NULL) {
+
+				/* On se place sur le dernier frère */
+				while (cour != NULL) {
+					prec = &cour->frere;
+					cour = cour->frere;
+				}
+
 			}
+			/* On insère le nouvel élément dans l'arbre */
+			*prec = nouvElem;
 
+		/* La recherche n'a pas aboutie, on libère le nouvel élément */
+		} else {
+			free(nouvElem);
+			codeErreur = 1;
 		}
-		*prec = nouvElem;
 
+	/* L'allocation du nouvel élément n'a pas aboutie */
 	} else {
 		codeErreur = 1;
 	}
+
+	/* Retourne le code d'erreur */
 	return codeErreur;
 }
 
 
 char libererArbre(elemArbre_t ** arbre) {
-	char fin = 0;
-	char codeErreur = 0;
-
-	elemArbre_t * prec = *arbre;
-	elemArbre_t * cour = *arbre;
-	pile_t * pileArbre = initPile(10);
+	char fin        = 0; /* Booléen, 1 actions finies, 0 on continue */
+	char codeErreur = 0; /* Code d'erreur, 0 si pas d'erreur, 1 sinon */
 
 
-	if (*arbre != NULL && pileArbre != NULL) {
+	elemArbre_t * prec = *arbre; /* Pointeur précédent cour */
+	elemArbre_t * cour = *arbre; /* Pointeur courant parcourant l'arbre */
+	pile_t * pileArbre = initPile(10); /* Pile utilisée pour parcourir l'arbre */
+
+
+	/* Si l'allocation de la pile à réussie alors : */
+	if (pileArbre != NULL) {
+
+		/* Tant qu'on a pas finit les actions */
 		while (!fin) {
 
+			/* Parcours en profondeur de l'arbre, on descend le plus possible
+			dans les fils */
 			while (cour != NULL) {
 				empiler(pileArbre, cour);
 				cour = cour->fils;
 			}
 
+			/* Si la pile n'est pas vide (l'arbre n'est pas finit d'être parcouru),
+			on dépile un élément et on se place sur son frère.
+			Puisque tous les éléments de l'arbre rentrent dans la pile, on peut
+			les libérer au fur et à mesure que l'in dépile */
 			if (!estVidePile(pileArbre)) {
 				depiler(pileArbre, &cour);
 				prec = cour;
 				cour = cour->frere;
 				free(prec);
 
+			/* Si la pile est vide, on a terminé le parcours */
 			} else {
 				fin = 1;
 			}
 		}
 
+		/* Il faut libérer la mémoire utilisée par la pile */
+		libererPile(pileArbre);
+
+	/* Si la pile n'a pas pu être alloué, erreur */
 	} else {
 		codeErreur = 1;
 	}
 
-	libererPile(pileArbre);
-
+	/* L'arbre est alors vide */
 	(*arbre) = NULL;
 
+	/* Retourne le code erreur */
 	return codeErreur;
 }
