@@ -96,82 +96,86 @@ elemArbre_t * creerArbreNotaAlgebrique(char * notation) {
 	int i          = 0; /* Compteur pour parcourir notation et remplir l'arbre */
 	int codeErreur = 0; /* Code d'erreur, 0 si pas d'erreur, 1 sinon */
 	int taille     = tailleChaine(notation); /* Taille du tableau notation */
+	elemArbre_t * arbre = NULL;
 
-	pile_t * pileArbre = initPile(taille/2); /* Pile utilisée pour parcourir l'arbre */
+	if (notation[0] != '\0') {
 
-	/* Le premier élément de l'arbre est créé, et empilé */
-	elemArbre_t * arbre = creerElemArbre();
-	elemArbre_t * cour = arbre; /* Pointeur courant pour parcourir l'arbre */
-	elemArbre_t * nouvElem = NULL; /* Pointeur sur les nouveaux éléments de l'arbre */
-	empiler(pileArbre, cour);
+		pile_t * pileArbre = initPile(taille/2); /* Pile utilisée pour parcourir l'arbre */
 
-	/* Si les allocations mémoires ont réussies alors : */
-	if (arbre != NULL && pileArbre != NULL) {
+		/* Le premier élément de l'arbre est créé, et empilé */
+		arbre = creerElemArbre();
+		elemArbre_t * cour = arbre; /* Pointeur courant pour parcourir l'arbre */
+		elemArbre_t * nouvElem = NULL; /* Pointeur sur les nouveaux éléments de l'arbre */
+		empiler(pileArbre, cour);
 
-		/* Tant qu'on a pas finit (fin de notation) et pas d'erreur */
-		while (notation[i] != '\0' && codeErreur == 0) {
+		/* Si les allocations mémoires ont réussies alors : */
+		if (arbre != NULL && pileArbre != NULL) {
 
-			/* 'x', donc un fils suivera automatiquement, il faut creer 
-			un nouvel élément fils et se placer dessus */
-			if (notation[i] == '*') {
+			/* Tant qu'on a pas finit (fin de notation) et pas d'erreur */
+			while (notation[i] != '\0' && codeErreur == 0) {
 
-				nouvElem = creerElemArbre();
-				if (nouvElem != NULL) {
-					cour->fils = nouvElem;
-					cour = nouvElem;
+				/* 'x', donc un fils suivera automatiquement, il faut creer 
+				un nouvel élément fils et se placer dessus */
+				if (notation[i] == '*') {
 
-				/* Erreur si la création de l'élément est impossible */
-				} else {
-					codeErreur = 1;
-				}
+					nouvElem = creerElemArbre();
+					if (nouvElem != NULL) {
+						cour->fils = nouvElem;
+						cour = nouvElem;
 
-			/* '+', donc un frère suivera automatiquement, il faut créer
-			un nouvel élément frère et se placer dessus. Dans le cas ou cet élément
-			à des fils et des freres, il faudra revenir dessus plus tard, alors on
-			l'empile */
-			} else if (notation[i] == '+') {
+					/* Erreur si la création de l'élément est impossible */
+					} else {
+						codeErreur = 1;
+					}
 
-				depiler(pileArbre, &cour);
-				nouvElem = creerElemArbre();
+				/* '+', donc un frère suivera automatiquement, il faut créer
+				un nouvel élément frère et se placer dessus. Dans le cas ou cet élément
+				à des fils et des freres, il faudra revenir dessus plus tard, alors on
+				l'empile */
+				} else if (notation[i] == '+') {
 
-				if (nouvElem != NULL) {
-					cour->frere = nouvElem;
-					cour = nouvElem;
+					depiler(pileArbre, &cour);
+					nouvElem = creerElemArbre();
+
+					if (nouvElem != NULL) {
+						cour->frere = nouvElem;
+						cour = nouvElem;
+						empiler(pileArbre, cour);
+
+					/* Erreur si la création de l'élément est impossible */
+					} else {
+						codeErreur = 1;
+					}
+
+				/* '(', donc une suite de frères va suivre, on empile le premier pour
+				y revenir dans le futur */
+				} else if (notation[i] == '(') {
 					empiler(pileArbre, cour);
 
-				/* Erreur si la création de l'élément est impossible */
+				/* ')', donc la suite de frères est terminée, on dépile pour revenir sur
+				l'élément précédent cette suite */
+				} else if (notation[i] == ')') {
+					depiler(pileArbre, &cour);
+
+				/* Si aucun opérateurs liés à la notation algébrique n'est lu précédement, alors
+				il s'agit de la valeur du dernier élément créé, donc on la place dans l'arbre */
 				} else {
-					codeErreur = 1;
+					cour->valeur = notation[i];
 				}
 
-			/* '(', donc une suite de frères va suivre, on empile le premier pour
-			y revenir dans le futur */
-			} else if (notation[i] == '(') {
-				empiler(pileArbre, cour);
-
-			/* ')', donc la suite de frères est terminée, on dépile pour revenir sur
-			l'élément précédent cette suite */
-			} else if (notation[i] == ')') {
-				depiler(pileArbre, &cour);
-
-			/* Si aucun opérateurs liés à la notation algébrique n'est lu précédement, alors
-			il s'agit de la valeur du dernier élément créé, donc on la place dans l'arbre */
-			} else {
-				cour->valeur = notation[i];
+				/* Incrémente ce compteur pour avancer dans la lecture de notation */
+				i++;
 			}
 
-			/* Incrémente ce compteur pour avancer dans la lecture de notation */
-			i++;
+			/* Il faut libérer la mémoire utilisée par la pile */
+			libererPile(pileArbre);
+
+			/* Et libérer ce qui a été créé de l'arbre si une erreur c'est produite */
+			if (codeErreur == 1) {
+				libererArbre(&arbre);
+			}
+
 		}
-
-		/* Il faut libérer la mémoire utilisée par la pile */
-		libererPile(pileArbre);
-
-		/* Et libérer ce qui a été créé de l'arbre si une erreur c'est produite */
-		if (codeErreur == 1) {
-			libererArbre(&arbre);
-		}
-
 	}
 
 	/* Retourner l'arbre ou NULL */
